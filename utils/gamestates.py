@@ -1,5 +1,6 @@
 import pygame
-from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_COLOR
+
 
 
 def highscores(newscore, screen):
@@ -26,13 +27,13 @@ def highscores(newscore, screen):
 
 def show_go_screen(screen, scoreinfo, highscore_spot, FONT):
     if highscore_spot != -1:
-        hsblurb = FONT.render("HIGH SCORE!!!", True, "white")
+        hsblurb = FONT.render("HIGH SCORE!!!", True, "green")
     else:
-        hsblurb = FONT.render("High Scores:", True, "white")
-    score1 = FONT.render(f"1. {scoreinfo[0].rstrip()}", True, "white")
-    score2 = FONT.render(f"2. {scoreinfo[1].rstrip()}", True, "white")
-    score3 = FONT.render(f"3. {scoreinfo[2].rstrip()}", True, "white")
-    text_surface = FONT.render("Press space bar to play again", True, "white")
+        hsblurb = FONT.render("High Scores:", True, FONT_COLOR)
+    score1 = FONT.render(f"1. {scoreinfo[0].rstrip()}", True, FONT_COLOR)
+    score2 = FONT.render(f"2. {scoreinfo[1].rstrip()}", True, FONT_COLOR)
+    score3 = FONT.render(f"3. {scoreinfo[2].rstrip()}", True, FONT_COLOR)
+    text_surface = FONT.render("Press space bar to play again", True, FONT_COLOR)
     screen.blit(text_surface, (SCREEN_WIDTH / 2-200, SCREEN_HEIGHT / 2))
     screen.blit(score1, (SCREEN_WIDTH / 2-50, SCREEN_HEIGHT / 2-150))
     screen.blit(score2, (SCREEN_WIDTH / 2-50, SCREEN_HEIGHT / 2-100))

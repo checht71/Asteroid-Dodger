@@ -7,7 +7,7 @@ from utils.constants import *
 
 # pygame setup
 pygame.init()
-pygame.display.set_caption('Asteroid Belt v0.5.5')
+pygame.display.set_caption('Asteroid Belt v0.5.6')
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 score = 0.0
@@ -19,7 +19,7 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 player_color = "white"
 speed_multiplier = 1
 speed_boost = 1
-FONT = pygame.font.SysFont('mats bold', 40)
+FONT = pygame.font.SysFont('mats bold', FONT_SIZE)
 
 enemy = [meteor(screen) for i in range(MAX_METEORS)]
 num_enemies = STARTING_METEORS
@@ -28,8 +28,8 @@ stars = [star(screen) for i in range(50)]
 while running:
     screen.fill("black")
     player = pygame.draw.rect(screen, player_color, (player_pos.x, player_pos.y, 50, 60))
-    text_surface = FONT.render(str(round(score))+'0', True, "white")
-    screen.blit(text_surface, (10, 10))
+    score_text = FONT.render(str(round(score)*10), True, FONT_COLOR)
+    screen.blit(score_text, (10, 10))
 
     for astar in stars:
         astar.draw()
@@ -40,6 +40,7 @@ while running:
         enemy[x].draw()
         enemy[x].move(dt, speed_multiplier)
 
+        #END GAME AND RESTART ON COLLISION
         if player.collidelist([enemy[x].drawing]) != -1:
             scoreinfo, highscore_spot = highscores(score, screen)
             show_go_screen(screen, scoreinfo, highscore_spot, FONT)
@@ -48,16 +49,14 @@ while running:
                 enemy[y].reset()
             speed_multiplier = 1
             num_enemies = 5
+            player_color = "white"
+            speed_boost = 1
 
 
 
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            player_color = "red"
-        if event.type == pygame.MOUSEBUTTONUP:
-            player_color = "white"
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYUP:

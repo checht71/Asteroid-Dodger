@@ -2,6 +2,7 @@
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 FONT_SIZE = 50
+FONT_COLOR = 'darkgoldenrod1'
 
 # Asteroid Behavior
 MAX_METEORS = 7
