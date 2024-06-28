@@ -1,12 +1,13 @@
 # Example file showing a circle moving on screen
 import pygame
 from random import randint
-from utils.meteor import meteor
+from utils.meteor import meteor, star
 from utils.gamestates import show_go_screen, checklevel, highscores
 from utils.constants import *
 
 # pygame setup
 pygame.init()
+pygame.display.set_caption('Asteroid Belt v0.5.5')
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 score = 0.0
@@ -22,11 +23,19 @@ FONT = pygame.font.SysFont('mats bold', 40)
 
 enemy = [meteor(screen) for i in range(MAX_METEORS)]
 num_enemies = STARTING_METEORS
+stars = [star(screen) for i in range(50)]
+
 while running:
     screen.fill("black")
     player = pygame.draw.rect(screen, player_color, (player_pos.x, player_pos.y, 50, 60))
     text_surface = FONT.render(str(round(score))+'0', True, "white")
     screen.blit(text_surface, (10, 10))
+
+    for astar in stars:
+        astar.draw()
+        astar.move(dt, speed_multiplier)
+
+
     for x in range(num_enemies):
         enemy[x].draw()
         enemy[x].move(dt, speed_multiplier)
@@ -39,6 +48,8 @@ while running:
                 enemy[y].reset()
             speed_multiplier = 1
             num_enemies = 5
+
+
 
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
