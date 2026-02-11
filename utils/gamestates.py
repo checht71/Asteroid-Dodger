@@ -23,7 +23,6 @@ def highscores(newscore, screen):
 
     return scoreinfo, highscore_spot
 
-        
 
 def show_go_screen(screen, scoreinfo, highscore_spot, FONT):
     if highscore_spot != -1:
@@ -50,12 +49,4 @@ def show_go_screen(screen, scoreinfo, highscore_spot, FONT):
                 if event.key == pygame.K_SPACE:
                     done = True
 
-
-def checklevel(score):
-    if score >= 1000 and score < 2000:
-        level = 2
-    if score >= 2000:
-        level = 3
-    
-    return score
 
