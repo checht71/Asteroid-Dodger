@@ -41,17 +41,18 @@ while running:
         enemy[x].draw()
         enemy[x].move(dt, game_difficulty_speed)
 
+
         #END GAME AND RESTART ON COLLISION
-    if player.collidelist([enemy[x].drawing]) != -1:
-        highscores_list, highscore_rank = highscores(score, screen)
-        show_go_screen(screen, highscores_list, highscore_rank, FONT)
-        score = 0
-        for y in range(num_enemies):
-            enemy[y].reset()
-        game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
-        num_enemies = constants.METEORS_MINIMUM
-        player_color = constants.PLAYER_COLOR_DEFAULT
-        speed_boost = constants.PLAYER_SPEED_MULTIPLIER_DEFAULT
+        if player.collidelist([enemy[x].drawing]) != -1:
+            highscores_list, highscore_rank = highscores(score, screen)
+            show_go_screen(screen, highscores_list, highscore_rank, FONT)
+            score = 0
+            for y in range(num_enemies):
+                enemy[y].reset()
+            game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
+            num_enemies = constants.METEORS_MINIMUM
+            player_color = constants.PLAYER_COLOR_DEFAULT
+            speed_boost = constants.PLAYER_SPEED_MULTIPLIER_DEFAULT
 
 
     # poll for events
@@ -80,7 +81,7 @@ while running:
         if player_pos.x <= screen_width:
             player_pos.x += player_speed
     if keys[pygame.K_LSHIFT]:
-        speed_boost = PLAYER_SPEED_MULTIPLIER_BOOSTED
+        speed_boost = constants.PLAYER_SPEED_MULTIPLIER_BOOSTED
         player_color = constants.PLAYER_COLOR_BOOSTED
             
 
