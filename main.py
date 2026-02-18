@@ -2,12 +2,12 @@
 import pygame
 from random import randint
 from utils.meteor import meteor, star
-from utils.gamestates import show_go_screen, highscores
+from utils.gamestates import show_highscore_screen, update_highscores
 import utils.constants as constants
 
 # pygame setup
 pygame.init()
-pygame.display.set_caption('Asteroid Belt v0.5.7')
+pygame.display.set_caption('Asteroid Belt v0.6')
 screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 score = 0.0
@@ -22,9 +22,12 @@ player_color = constants.PLAYER_COLOR_DEFAULT
 speed_boost = constants.PLAYER_SPEED_MULTIPLIER_DEFAULT
 FONT = pygame.font.SysFont(constants.FONT_TYPE, constants.FONT_SIZE)
 # sprite init
-enemy = [meteor(screen) for i in range(constants.METEORS_MAX)]
-num_enemies = constants.METEORS_MINIMUM
+obstacle = [meteor(screen) for i in range(constants.METEORS_MAX)]
+num_obstacles = constants.METEORS_MINIMUM
 stars = [star(screen) for i in range(constants.MAX_STARS)]
+# AI setup
+log_location_scores = constants.SCORES_LOG_HUMAN
+log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
 
 while running:
     screen.fill("black")
@@ -36,23 +39,24 @@ while running:
         astar.draw()
         astar.move(dt, game_difficulty_speed)
 
-
-    for x in range(num_enemies):
-        enemy[x].draw()
-        enemy[x].move(dt, game_difficulty_speed)
-
+    for x in range(num_obstacles):
+        obstacle[x].draw()
+        obstacle[x].move(dt, game_difficulty_speed)
 
         #END GAME AND RESTART ON COLLISION
-        if player.collidelist([enemy[x].drawing]) != -1:
-            highscores_list, highscore_rank = highscores(score, screen)
-            show_go_screen(screen, highscores_list, highscore_rank, FONT)
+        if player.collidelist([obstacle[x].drawing]) != -1:
+            # show highscores
+            highscores_list, highscore_rank = update_highscores(score, screen, log_location_scores, log_location_highscores)
+            show_highscore_screen(screen, highscores_list, highscore_rank, FONT)
+            # reset player and meteors
             score = 0
-            for y in range(num_enemies):
-                enemy[y].reset()
+            for y in range(num_obstacles):
+                obstacle[y].reset()
             game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
-            num_enemies = constants.METEORS_MINIMUM
+            num_obstacles = constants.METEORS_MINIMUM
             player_color = constants.PLAYER_COLOR_DEFAULT
             speed_boost = constants.PLAYER_SPEED_MULTIPLIER_DEFAULT
+            player_pos = pygame.Vector2(screen.get_width()/2, screen.get_height()/2)
 
 
     # poll for events
@@ -94,7 +98,7 @@ while running:
     dt = clock.tick(60) / 1000
     score += constants.SCORE_PER_SECOND
     game_difficulty_speed += constants.GAME_SPEED_INCREASE_PER_SECOND
-    if round(score,1)%50 == 0.0 and score >= 10.0 and num_enemies < constants.METEORS_MAX:
-        num_enemies +=1
+    if round(score,1)%50 == 0.0 and score >= 10.0 and num_obstacles < constants.METEORS_MAX:
+        num_obstacles +=1
 
 pygame.quit()

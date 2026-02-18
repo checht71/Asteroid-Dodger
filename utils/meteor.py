@@ -20,10 +20,10 @@ class meteor():
     
     def reset(self):
         # Reset all meteors at game's end
-        self.pos.y = randint(-500, 0)
+        self.pos.y = randint(-1000, -500)
 
     def spawn(self):
-        self.pos.y = randint(-500, 0)
+        self.pos.y = randint(-1000, -500)
         self.pos.x = randint(0, SCREEN_WIDTH)
         self.width = randint(50, 250)
         self.height = self.width + randint(-30, 30)

@@ -26,3 +26,9 @@ PLAYER_SIZE_Y = 60
 PLAYER_SPEED_DEFAULT = 300
 PLAYER_SPEED_MULTIPLIER_BOOSTED = 3
 PLAYER_SPEED_MULTIPLIER_DEFAULT = 1
+
+# Score log locations
+HIGHSCORES_LOG_HUMAN = "./logs/highscores_human.csv"
+HIGHSCORES_LOG_AI = "./logs/highscores_ai.csv"
+SCORES_LOG_HUMAN = "./logs/scores_human.csv"
+SCORES_LOG_AI = "./logs/scores_ai.csv"

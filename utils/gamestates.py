@@ -3,11 +3,12 @@ from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_COLOR
 
 
 
-def highscores(newscore, screen):
+def update_highscores(newscore, screen, log_location_scores, log_location_highscores):
     highscore_rank = -1
     newscore = round(newscore)*10
-    with open("./assets/scores.csv", "r") as scores:
-        highscores_list = scores.readlines()
+    # read highscores, compare new score
+    with open("./assets/scores.csv", "r") as highscores_file:
+        highscores_list = highscores_file.readlines()
         for place, highscore in enumerate(highscores_list):
             highscore = int(highscore.rstrip())
             if newscore > highscore:
@@ -16,7 +17,7 @@ def highscores(newscore, screen):
                 highscores_list[place] = str(newscore)+"\n"
                 highscore_rank = place
                 break
-    
+    # write highschores
     with open("./assets/scores.csv", "w") as scores:
         for hs in highscores_list:
             scores.write(str(hs))
@@ -24,7 +25,7 @@ def highscores(newscore, screen):
     return highscores_list, highscore_rank
 
 
-def show_go_screen(screen, highscores_list, highscore_rank, FONT):
+def show_highscore_screen(screen, highscores_list, highscore_rank, FONT):
     if highscore_rank != -1:
         hsblurb = FONT.render("HIGH SCORE!!!", True, "green")
     else:
@@ -39,14 +40,14 @@ def show_go_screen(screen, highscores_list, highscore_rank, FONT):
     screen.blit(score3, (SCREEN_WIDTH / 2-50, SCREEN_HEIGHT / 2-50))
     screen.blit(hsblurb, (SCREEN_WIDTH / 2-100, SCREEN_HEIGHT / 2-200))
     pygame.display.flip()
-    done = False
-    while not done:
+    higscores_showing = True
+    while higscores_showing:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                done = True
+                higscores_showing = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    done = True
+                    higscores_showing = False
 
 

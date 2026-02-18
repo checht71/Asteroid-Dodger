@@ -1,0 +1,6 @@
+2/13/26
+- add .gitignore
+- fix player position does now resets on endgame
+2/18/26
+- Improve readability more
+- Updated meteors to always reset off screen 
