@@ -1,0 +1,10 @@
+
+- fix error handling for highscores files being empty
+
+- Create player class in entities.py to manage those constants and variables
+
+- Create "AI Mode" and "Human Mode". AI mode will skip game over and start screens so the AI can just do its thing.
+
+
+- Add Brendan's visuals
+- Add music

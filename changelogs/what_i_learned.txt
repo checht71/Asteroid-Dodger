@@ -1,0 +1,6 @@
+This file is to track what I learned during this project so I can include it in my presentation.
+
+- Github - branches, version control, naming convention, commit messages
+- Code readability skills - refactoring, docstrings, constants.py, file hierarchy
+- pygame
+- music production
