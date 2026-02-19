@@ -3,4 +3,8 @@
 - fix player position does now resets on endgame
 2/18/26
 - Improve readability more
-- Updated meteors to always reset off screen 
+- Update meteors to always reset off screen
+2/19/26
+- change magic number to meteor.DEFAULT_SPEED_DOWN constant
+- implement highscores_human.csv and scores_human.csv to track human stats
+- change meteor.py to entities.py for clarity

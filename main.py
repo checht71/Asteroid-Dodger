@@ -1,7 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 from random import randint
-from utils.meteor import meteor, star
+from utils.entities import meteor, star
 from utils.gamestates import show_highscore_screen, update_highscores
 import utils.constants as constants
 
@@ -28,6 +28,7 @@ stars = [star(screen) for i in range(constants.MAX_STARS)]
 # AI setup
 log_location_scores = constants.SCORES_LOG_HUMAN
 log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
+
 
 while running:
     screen.fill("black")

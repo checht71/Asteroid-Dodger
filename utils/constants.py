@@ -11,6 +11,9 @@ SCORE_PER_SECOND = 0.1
 GAME_SPEED_INCREASE_PER_SECOND = 0.0005
 GAME_DIFFICULTY_SPEED_STARTING = 1
 
+
+
+"""TODO: Asteroids, stars, and player behavior can be put into classes."""
 # Asteroid Behavior
 METEORS_MAX = 7
 METEORS_MINIMUM = 5

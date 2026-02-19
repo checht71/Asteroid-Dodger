@@ -7,8 +7,13 @@ def update_highscores(newscore, screen, log_location_scores, log_location_highsc
     highscore_rank = -1
     newscore = round(newscore)*10
     # read highscores, compare new score
-    with open("./assets/scores.csv", "r") as highscores_file:
+    with open(log_location_highscores, "r") as highscores_file:
         highscores_list = highscores_file.readlines()
+
+        # if the highscores list is empty, create list of zeros
+        if len(highscores_list) == 0:
+            highscores_list = ['0', '0', '0']
+        # iterate through highscores, place new highscore in
         for place, highscore in enumerate(highscores_list):
             highscore = int(highscore.rstrip())
             if newscore > highscore:
@@ -17,10 +22,15 @@ def update_highscores(newscore, screen, log_location_scores, log_location_highsc
                 highscores_list[place] = str(newscore)+"\n"
                 highscore_rank = place
                 break
+
     # write highschores
-    with open("./assets/scores.csv", "w") as scores:
+    with open(log_location_highscores, "w") as hscores:
         for hs in highscores_list:
-            scores.write(str(hs))
+            hscores.write(str(hs))
+    
+    # write scores
+    with open(log_location_scores, "a") as scores:
+        scores.write(str(newscore)+"\n")
 
     return highscores_list, highscore_rank
 
