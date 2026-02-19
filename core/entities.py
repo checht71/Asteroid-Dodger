@@ -1,6 +1,6 @@
 import pygame
 from random import randint, random
-from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from core.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from math import sqrt
 
 class meteor():

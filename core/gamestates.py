@@ -1,5 +1,5 @@
 import pygame
-from utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_COLOR
+from core.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_COLOR
 
 
 

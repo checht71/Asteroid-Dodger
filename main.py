@@ -1,9 +1,9 @@
 # Example file showing a circle moving on screen
 import pygame
 from random import randint
-from utils.entities import meteor, star
-from utils.gamestates import show_highscore_screen, update_highscores
-import utils.constants as constants
+from core.entities import meteor, star
+from core.gamestates import show_highscore_screen, update_highscores
+import core.constants as constants
 
 # pygame setup
 pygame.init()
