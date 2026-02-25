@@ -1,7 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 from random import randint
-from core.entities import meteor, star
+from core.entities import meteor, star, player
 from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
 
@@ -17,9 +17,7 @@ screen_height = screen.get_height() - constants.SCREEN_BORDER_LENGTH
 screen_width = screen.get_width() - constants.SCREEN_BORDER_LENGTH
 game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
 # player init
-player_pos = pygame.Vector2(screen.get_width()/2, screen.get_height()/2)
-player_color = constants.PLAYER_COLOR_DEFAULT
-speed_boost = constants.PLAYER_SPEED_MULTIPLIER_DEFAULT
+player = player(screen)
 FONT = pygame.font.SysFont(constants.FONT_TYPE, constants.FONT_SIZE)
 # sprite init
 obstacle = [meteor(screen) for i in range(constants.METEORS_MAX)]
@@ -31,8 +29,9 @@ log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
 
 
 while running:
+    # draw screen, player, and score text
     screen.fill("black")
-    player = pygame.draw.rect(screen, player_color, (player_pos.x, player_pos.y, constants.PLAYER_SIZE_X, constants.PLAYER_SIZE_Y))
+    player.draw()
     score_text = FONT.render(str(round(score)*10), True, constants.FONT_COLOR)
     screen.blit(score_text, (10, 10))
 
@@ -45,7 +44,7 @@ while running:
         obstacle[x].move(dt, game_difficulty_speed)
 
         #END GAME AND RESTART ON COLLISION
-        if player.collidelist([obstacle[x].drawing]) != -1:
+        if player.drawing.collidelist([obstacle[x].drawing]) != -1:
             # show highscores
             highscores_list, highscore_rank = update_highscores(score, screen, log_location_scores, log_location_highscores)
             show_highscore_screen(screen, highscores_list, highscore_rank, FONT)
@@ -55,9 +54,7 @@ while running:
                 obstacle[y].reset()
             game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
             num_obstacles = constants.METEORS_MINIMUM
-            player_color = constants.PLAYER_COLOR_DEFAULT
-            speed_boost = constants.PLAYER_SPEED_MULTIPLIER_DEFAULT
-            player_pos = pygame.Vector2(screen.get_width()/2, screen.get_height()/2)
+            player.reset()
 
 
     # poll for events
@@ -67,29 +64,12 @@ while running:
             running = False
         if event.type == pygame.KEYUP:
             if 'left shift'==pygame.key.name(event.key):
-                player_color = constants.PLAYER_COLOR_DEFAULT
-                speed_boost = constants.PLAYER_SPEED_MULTIPLIER_DEFAULT
-
+                player.set_default_speed()
+    
     #Input/Movement
     keys = pygame.key.get_pressed()
-    player_speed = constants.PLAYER_SPEED_DEFAULT * dt * speed_boost + game_difficulty_speed
-    if keys[pygame.K_w]:
-        if player_pos.y >= 0:
-            player_pos.y -= player_speed
-    if keys[pygame.K_s]:
-        if player_pos.y <= screen_height:
-            player_pos.y += player_speed
-    if keys[pygame.K_a]:
-        if player_pos.x >= 0:
-            player_pos.x -= player_speed
-    if keys[pygame.K_d]:
-        if player_pos.x <= screen_width:
-            player_pos.x += player_speed
-    if keys[pygame.K_LSHIFT]:
-        speed_boost = constants.PLAYER_SPEED_MULTIPLIER_BOOSTED
-        player_color = constants.PLAYER_COLOR_BOOSTED
+    player.check_movement(keys, dt, game_difficulty_speed)
             
-
     # flip() the display to put your work on screen
     pygame.display.flip()
 

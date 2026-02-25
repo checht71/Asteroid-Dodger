@@ -3,6 +3,52 @@ from random import randint, random
 from core.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from math import sqrt
 
+class player():
+
+    COLOR_DEFAULT = "white"
+    COLOR_BOOSTED = "blue"
+    SIZE_X = 50
+    SIZE_Y = 60
+    SPEED_DEFAULT = 300
+    SPEED_MULTIPLIER_BOOSTED = 3
+    SPEED_MULTIPLIER_DEFAULT = 1
+
+    def __init__(self, screen):
+        self.pos = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        self.color = player.COLOR_DEFAULT
+        self.speed_boost = player.SPEED_MULTIPLIER_DEFAULT
+        self.screen = screen
+
+    def draw(self):
+        self.drawing = pygame.draw.rect(self.screen, self.color, (self.pos.x, self.pos.y, player.SIZE_X, player.SIZE_Y))
+
+    def reset(self):
+        self.pos = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        self.set_default_speed()
+
+    def set_default_speed(self):
+        self.color = player.COLOR_DEFAULT
+        self.speed_boost = player.SPEED_MULTIPLIER_DEFAULT
+
+    def check_movement(self, keys, dt, game_difficulty_speed):
+        player_speed = player.SPEED_DEFAULT * dt * self.speed_boost + game_difficulty_speed
+        if keys[pygame.K_w]:
+            if self.pos.y >= 0:
+                self.pos.y -= player_speed
+        if keys[pygame.K_s]:
+            if self.pos.y <= SCREEN_HEIGHT:
+                self.pos.y += player_speed
+        if keys[pygame.K_a]:
+            if self.pos.x >= 0:
+                self.pos.x -= player_speed
+        if keys[pygame.K_d]:
+            if self.pos.x <= SCREEN_WIDTH:
+                self.pos.x += player_speed
+        if keys[pygame.K_LSHIFT]:
+            self.speed_boost = player.SPEED_MULTIPLIER_BOOSTED
+            self.color = player.COLOR_BOOSTED
+
+
 class meteor():
     """Meteors are the objects you have to dodge to progress thru the game.
     If they collide with the player, it's game over."""
