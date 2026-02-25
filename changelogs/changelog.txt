@@ -11,3 +11,6 @@
 2/19/26 (commit 2)
 - change folder names/hierarchy to better reflect files
 - change assets/scores.csv to highscores/highscores_human.csv
+2/25/26
+- refactor code around OOP
+- create player class
