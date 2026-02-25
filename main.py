@@ -79,6 +79,8 @@ while running:
     dt = clock.tick(60) / 1000
     score += constants.SCORE_PER_SECOND
     game_difficulty_speed += constants.GAME_SPEED_INCREASE_PER_SECOND
+
+    # increase meteors every 500 points
     if round(score,1)%50 == 0.0 and score >= 10.0 and num_obstacles < constants.METEORS_MAX:
         num_obstacles +=1
 

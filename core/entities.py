@@ -12,6 +12,7 @@ class player():
     SPEED_DEFAULT = 300
     SPEED_MULTIPLIER_BOOSTED = 3
     SPEED_MULTIPLIER_DEFAULT = 1
+    SCREEN_BORDER_MARGIN = 50
 
     def __init__(self, screen):
         self.pos = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -36,13 +37,13 @@ class player():
             if self.pos.y >= 0:
                 self.pos.y -= player_speed
         if keys[pygame.K_s]:
-            if self.pos.y <= SCREEN_HEIGHT:
+            if self.pos.y <= SCREEN_HEIGHT - player.SCREEN_BORDER_MARGIN:
                 self.pos.y += player_speed
         if keys[pygame.K_a]:
             if self.pos.x >= 0:
                 self.pos.x -= player_speed
         if keys[pygame.K_d]:
-            if self.pos.x <= SCREEN_WIDTH:
+            if self.pos.x <= SCREEN_WIDTH - player.SCREEN_BORDER_MARGIN:
                 self.pos.x += player_speed
         if keys[pygame.K_LSHIFT]:
             self.speed_boost = player.SPEED_MULTIPLIER_BOOSTED

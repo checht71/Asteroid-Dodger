@@ -11,24 +11,13 @@ SCORE_PER_SECOND = 0.1
 GAME_SPEED_INCREASE_PER_SECOND = 0.0005
 GAME_DIFFICULTY_SPEED_STARTING = 1
 
-
-
 """TODO: Asteroids, stars, and player behavior can be put into classes."""
 # Asteroid Behavior
-METEORS_MAX = 7
-METEORS_MINIMUM = 5
+METEORS_MAX = 10
+METEORS_MINIMUM = 6
 
 # Star Behavior
 MAX_STARS = 50
-
-# Player Behavior
-PLAYER_COLOR_DEFAULT = "white"
-PLAYER_COLOR_BOOSTED = "blue"
-PLAYER_SIZE_X = 50
-PLAYER_SIZE_Y = 60
-PLAYER_SPEED_DEFAULT = 300
-PLAYER_SPEED_MULTIPLIER_BOOSTED = 3
-PLAYER_SPEED_MULTIPLIER_DEFAULT = 1
 
 # Score log locations
 HIGHSCORES_LOG_HUMAN = "./highscores/highscores_human.csv"

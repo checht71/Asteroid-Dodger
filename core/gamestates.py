@@ -1,6 +1,20 @@
 import pygame
 from core.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_COLOR
 
+def show_start_screen(screen, FONT):
+
+    text_surface = FONT.render("Press space bar to play again", True, FONT_COLOR)
+    screen.blit(text_surface, (SCREEN_WIDTH / 2-200, SCREEN_HEIGHT / 2))
+    pygame.display.flip()
+    startscreen_showing = True
+    while startscreen_showing:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                startscreen_showing = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    startscreen_showing = False
 
 
 def update_highscores(newscore, screen, log_location_scores, log_location_highscores):
@@ -54,8 +68,8 @@ def show_highscore_screen(screen, highscores_list, highscore_rank, FONT):
     while higscores_showing:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
                 higscores_showing = False
+                exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     higscores_showing = False

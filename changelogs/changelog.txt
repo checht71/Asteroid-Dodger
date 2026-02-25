@@ -8,9 +8,15 @@
 - change magic number to meteor.DEFAULT_SPEED_DOWN constant
 - implement highscores_human.csv and scores_human.csv to track human stats
 - change meteor.py to entities.py for clarity
-2/19/26 (commit 2)
+(commit 2)
 - change folder names/hierarchy to better reflect files
 - change assets/scores.csv to highscores/highscores_human.csv
 2/25/26
 - refactor code around OOP
 - create player class
+(commit 2)
+- fix player able to leave screen by adding screen margin
+- add score plot devtool
+- deleted "master" and "refactor-readability" branches
+- fix game restart on trying to exit window
+- raised min and max meteors to make game more difficult
