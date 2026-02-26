@@ -10,8 +10,8 @@ def show_start_screen(screen, FONT):
     while startscreen_showing:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
                 startscreen_showing = False
+                exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     startscreen_showing = False

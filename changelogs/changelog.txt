@@ -18,5 +18,11 @@
 - fix player able to leave screen by adding screen margin
 - add score plot devtool
 - deleted "master" and "refactor-readability" branches
-- fix game restart on trying to exit window
 - raised min and max meteors to make game more difficult
+(commit 3)
+- update class names to use PascalCase
+- fix game restart on trying to exit window
+2/26/26
+- change "per_second" var names to "per_tick" to be more descriptive
+- delete unused var
+- Add AI training mode (changes highscore log, does not show hs screen on restart)

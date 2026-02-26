@@ -7,8 +7,8 @@ FONT_COLOR = 'darkgoldenrod1'
 SCREEN_BORDER_LENGTH = 100
 
 # Environmental Behavior
-SCORE_PER_SECOND = 0.1
-GAME_SPEED_INCREASE_PER_SECOND = 0.0005
+SCORE_PER_TICK = 0.1
+GAME_SPEED_INCREASE_PER_TICK = 0.0005
 GAME_DIFFICULTY_SPEED_STARTING = 1
 
 """TODO: Asteroids, stars, and player behavior can be put into classes."""
