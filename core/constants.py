@@ -21,6 +21,4 @@ MAX_STARS = 50
 
 # Score log locations
 HIGHSCORES_LOG_HUMAN = "./highscores/highscores_human.csv"
-HIGHSCORES_LOG_AI = "./highscores/highscores_ai.csv"
 SCORES_LOG_HUMAN = "./highscores/scores_human.csv"
-SCORES_LOG_AI = "./highscores/scores_ai.csv"

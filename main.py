@@ -20,14 +20,8 @@ FONT = pygame.font.SysFont(constants.FONT_TYPE, constants.FONT_SIZE)
 obstacle = [Meteor(screen) for i in range(constants.METEORS_MAX)]
 num_obstacles = constants.METEORS_MINIMUM
 stars = [Star(screen) for i in range(constants.MAX_STARS)]
-# AI setup
-TRAINING_AI = True
-if TRAINING_AI:
-    log_location_scores = constants.SCORES_LOG_AI
-    log_location_highscores = constants.HIGHSCORES_LOG_AI
-else:
-    log_location_scores = constants.SCORES_LOG_HUMAN
-    log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
+log_location_scores = constants.SCORES_LOG_HUMAN
+log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
 
 
 
@@ -51,8 +45,7 @@ while running:
         if Player.drawing.collidelist([obstacle[x].drawing]) != -1:
             # update then show highscores
             highscores_list, highscore_rank = update_highscores(score, screen, log_location_scores, log_location_highscores)
-            if TRAINING_AI == False:
-                show_highscore_screen(screen, highscores_list, highscore_rank, FONT)
+            show_highscore_screen(screen, highscores_list, highscore_rank, FONT)
             # reset player and meteors
             score = 0
             for y in range(num_obstacles):
