@@ -1,6 +1,6 @@
 import pygame
 from random import randint
-from core.entities import Meteor, Star, Player
+from core.entities import Meteor, Star, Player, Coin
 from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
 
@@ -20,8 +20,9 @@ FONT = pygame.font.SysFont(constants.FONT_TYPE, constants.FONT_SIZE)
 obstacle = [Meteor(screen) for i in range(constants.METEORS_MAX)]
 num_obstacles = constants.METEORS_MINIMUM
 stars = [Star(screen) for i in range(constants.MAX_STARS)]
+coin_spawned = False
 # AI setup
-TRAINING_AI = True
+TRAINING_AI = False
 if TRAINING_AI:
     log_location_scores = constants.SCORES_LOG_AI
     log_location_highscores = constants.HIGHSCORES_LOG_AI
@@ -30,12 +31,22 @@ else:
     log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
 
 
-
 while running:
     # draw screen and score text
     screen.fill("black")
     score_text = FONT.render(str(round(score)*10), True, constants.FONT_COLOR)
     screen.blit(score_text, (10, 10))
+
+
+    if coin_spawned:
+        points_coin.draw(coin_spawned)
+        points_coin.move(dt, game_difficulty_speed)
+
+        # Add points and kill coin on collision
+        if Player.drawing.collidelist([points_coin.drawing]) != -1:
+            score += points_coin.SCORE_VALUE
+            coin_spawned = False
+
 
     # draw and move entities
     Player.draw()
@@ -60,6 +71,7 @@ while running:
             game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
             num_obstacles = constants.METEORS_MINIMUM
             Player.reset()
+            coin_spawned = False
 
 
     # poll for events
@@ -85,8 +97,14 @@ while running:
     score += constants.SCORE_PER_TICK
     game_difficulty_speed += constants.GAME_SPEED_INCREASE_PER_TICK
 
+    # Time dependent events
     # increase meteors every 500 points
     if round(score,1)%50 == 0.0 and score >= 10.0 and num_obstacles < constants.METEORS_MAX:
         num_obstacles +=1
+    
+    if round(score,1)%50 == 0.0:
+        if coin_spawned == False:
+            points_coin = Coin(screen)
+            coin_spawned = True
 
 pygame.quit()

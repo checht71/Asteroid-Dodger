@@ -90,6 +90,7 @@ class Meteor():
 class Star():
     SPAWN_Y_MIN = -1000
     SPAWN_Y_MAX = 1000
+    DEFAULT_SPEED_DOWN = 350
 
     """Stars are background objects with no collision. For visual purposes only"""
     def __init__(self, screen):
@@ -100,7 +101,7 @@ class Star():
         
     def move(self, dt, speed_multiplier):
         """Move the position of the star down the screen"""
-        self.pos.y += 350*dt*speed_multiplier
+        self.pos.y += Star.DEFAULT_SPEED_DOWN*speed_multiplier*dt
         if self.pos.y >= SCREEN_HEIGHT:
             self.pos.y = randint(-2000, 0)
             self.pos.x = randint(0, SCREEN_WIDTH)
@@ -115,3 +116,32 @@ class Star():
         """Reset all stars at game's end"""
         self.pos.y = randint(-500, 0)
 
+
+class Coin():
+    """Collect the coins to earn more points. Encourages player risk."""
+    DEFAULT_SPEED_DOWN = 300
+    SCORE_VALUE = 50
+
+
+    def __init__(self, screen):
+        self.spawn_y = -randint(750, 1250)
+        self.pos = pygame.Vector2(randint(0, SCREEN_WIDTH), self.spawn_y)
+        self.diameter = 50
+        self.screen = screen
+        
+    def move(self, dt, speed_multiplier):
+        """Move the position of the coin down the screen"""
+        self.pos.y += Coin.DEFAULT_SPEED_DOWN*speed_multiplier*dt
+            
+    def draw(self, coin_spawned):
+        """Display each star on screen"""
+        if coin_spawned:
+            self.drawing = pygame.draw.rect(self.screen, "yellow", (self.pos.x, self.pos.y, self.diameter, self.diameter))
+    
+    def reset(self):
+        """Move coin out of range at the game's end"""
+        self.pos.y = self.spawn_y
+
+
+    def is_touched(self, score):
+        score += 50

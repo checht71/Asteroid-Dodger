@@ -26,3 +26,6 @@
 - change "per_second" var names to "per_tick" to be more descriptive
 - delete unused var
 - Add AI training mode (changes highscore log, does not show hs screen on restart)
+(commit 2)
+- add screen center constants for clarity
+- add and implement coin

@@ -1,10 +1,9 @@
 import pygame
-from core.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_COLOR
+from core.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_COLOR, SCREEN_CENTER_X, SCREEN_CENTER_Y
 
 def show_start_screen(screen, FONT):
-
     text_surface = FONT.render("Press space bar to play again", True, FONT_COLOR)
-    screen.blit(text_surface, (SCREEN_WIDTH / 2-200, SCREEN_HEIGHT / 2))
+    screen.blit(text_surface, (SCREEN_CENTER_X - 200,   SCREEN_CENTER_Y))
     pygame.display.flip()
     startscreen_showing = True
     while startscreen_showing:
@@ -50,25 +49,28 @@ def update_highscores(newscore, screen, log_location_scores, log_location_highsc
 
 
 def show_highscore_screen(screen, highscores_list, highscore_rank, FONT):
+    """Show all of the highscores on screen. Wait for player input to restart game."""
+    # show text and scores
     if highscore_rank != -1:
         hsblurb = FONT.render("HIGH SCORE!!!", True, "green")
     else:
         hsblurb = FONT.render("High Scores:", True, FONT_COLOR)
-    score1 = FONT.render(f"1. {highscores_list[0].rstrip()}", True, FONT_COLOR)
-    score2 = FONT.render(f"2. {highscores_list[1].rstrip()}", True, FONT_COLOR)
-    score3 = FONT.render(f"3. {highscores_list[2].rstrip()}", True, FONT_COLOR)
+        screen.blit(hsblurb, (SCREEN_CENTER_X-100, SCREEN_CENTER_Y-200))
+
+    for score_rank in range(0,len(highscores_list)):
+        score_display = FONT.render(f"{score_rank+1}. {highscores_list[score_rank].rstrip()}", True, FONT_COLOR)
+        screen.blit(score_display, (SCREEN_CENTER_X-50, SCREEN_CENTER_Y+(score_rank*50)-150))
+
     text_surface = FONT.render("Press space bar to play again", True, FONT_COLOR)
-    screen.blit(text_surface, (SCREEN_WIDTH / 2-200, SCREEN_HEIGHT / 2))
-    screen.blit(score1, (SCREEN_WIDTH / 2-50, SCREEN_HEIGHT / 2-150))
-    screen.blit(score2, (SCREEN_WIDTH / 2-50, SCREEN_HEIGHT / 2-100))
-    screen.blit(score3, (SCREEN_WIDTH / 2-50, SCREEN_HEIGHT / 2-50))
-    screen.blit(hsblurb, (SCREEN_WIDTH / 2-100, SCREEN_HEIGHT / 2-200))
+    
     pygame.display.flip()
     higscores_showing = True
+    # Wait for player input before restarting game
     while higscores_showing:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 higscores_showing = False
+                pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
