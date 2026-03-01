@@ -55,7 +55,8 @@ def show_highscore_screen(screen, highscores_list, highscore_rank, FONT):
         hsblurb = FONT.render("HIGH SCORE!!!", True, "green")
     else:
         hsblurb = FONT.render("High Scores:", True, FONT_COLOR)
-        screen.blit(hsblurb, (SCREEN_CENTER_X-100, SCREEN_CENTER_Y-200))
+    
+    screen.blit(hsblurb, (SCREEN_CENTER_X-100, SCREEN_CENTER_Y-200))
 
     for score_rank in range(0,len(highscores_list)):
         score_display = FONT.render(f"{score_rank+1}. {highscores_list[score_rank].rstrip()}", True, FONT_COLOR)

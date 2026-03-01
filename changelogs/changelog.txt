@@ -29,3 +29,5 @@
 (commit 2)
 - add screen center constants for clarity
 - add and implement coin
+3/1/26
+- fix highscores blurb not showing on high score record

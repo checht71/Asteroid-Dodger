@@ -57,9 +57,10 @@ class Meteor():
     DEFAULT_SPEED_DOWN = 400
     SPAWN_Y_MIN = -1000
     SPAWN_Y_MAX = -500
+    COLOR = "azure4"
 
     def __init__(self, screen):
-        self.pos = pygame.Vector2(randint(0, SCREEN_WIDTH), randint(-500, 0))
+        self.pos = pygame.Vector2(randint(0, SCREEN_WIDTH), randint(Meteor.SPAWN_Y_MAX, 0))
         self.screen = screen
         self.spawn()
         
@@ -72,7 +73,9 @@ class Meteor():
 
     def draw(self):
         """Display the Meteor on screen"""
-        self.drawing = pygame.draw.rect(self.screen, "red", (self.pos.x, self.pos.y, self.width, self.height))
+        self.drawing = pygame.draw.rect(self.screen, Meteor.COLOR, (self.pos.x, self.pos.y, self.width, self.height))
+        self.drawing2 = pygame.draw.rect(self.screen, Meteor.COLOR, (self.pos.x-20, self.pos.y-20, self.height, self.width))
+        self.drawing3 = pygame.draw.rect(self.screen, Meteor.COLOR, (self.pos.x+10, self.pos.y-10, self.height+10, self.width-10))
     
     def reset(self):
         """Reset all Meteors at game's end"""
