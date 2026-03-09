@@ -1,6 +1,8 @@
 #Window & Fonts
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
+SCREEN_CENTER_Y = SCREEN_HEIGHT/2
+SCREEN_CENTER_X = SCREEN_WIDTH/2
 FONT_SIZE = 50
 FONT_TYPE = 'mats bold'
 FONT_COLOR = 'darkgoldenrod1'
@@ -22,3 +24,5 @@ MAX_STARS = 50
 # Score log locations
 HIGHSCORES_LOG_HUMAN = "./highscores/highscores_human.csv"
 SCORES_LOG_HUMAN = "./highscores/scores_human.csv"
+
+COIN_SPAWN_CHANCE = 360 # 1/x chance the score will spawn per frame. Higher = less likely
