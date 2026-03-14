@@ -13,13 +13,13 @@ SCORE_PER_TICK = 0.1
 GAME_SPEED_INCREASE_PER_TICK = 0.0005
 GAME_DIFFICULTY_SPEED_STARTING = 1
 
-"""TODO: Asteroids, stars, and player behavior can be put into classes."""
 # Asteroid Behavior
 METEORS_MAX = 10
 METEORS_MINIMUM = 6
 
-# Star Behavior
+# Entity Behavior
 MAX_STARS = 50
+COIN_SPAWN_CHANCE = 360 # 1/x chance the score will spawn per frame. Higher = less likely
 
 # Score log locations
 HIGHSCORES_LOG_HUMAN = "./highscores/highscores_human.csv"
@@ -27,4 +27,7 @@ HIGHSCORES_LOG_AI = "./highscores/highscores_ai.csv"
 SCORES_LOG_HUMAN = "./highscores/scores_human.csv"
 SCORES_LOG_AI = "./highscores/scores_ai.csv"
 
-COIN_SPAWN_CHANCE = 360 # 1/x chance the score will spawn per frame. Higher = less likely
+
+# Music
+INGAME_MUSIC = "./assets/arcade_2.mp3"
+MENU_MUSIC = "./assets/star_crusader.mp3"

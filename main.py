@@ -3,6 +3,7 @@ from random import randint
 from core.entities import Meteor, Star, Player, Coin
 from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
+from core.music import change_music
 
 # pygame setup
 pygame.init()
@@ -13,10 +14,14 @@ score = 0.0
 running = True
 dt = 0
 game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
+# Music setup
+pygame.mixer.init()
+pygame.mixer.music.load(constants.INGAME_MUSIC)
+pygame.mixer.music.play(-1)
 # Player init
 Player = Player(screen)
 FONT = pygame.font.SysFont(constants.FONT_TYPE, constants.FONT_SIZE)
-# sprite init
+# Sprite init
 obstacle = [Meteor(screen) for i in range(constants.METEORS_MAX)]
 num_obstacles = constants.METEORS_MINIMUM
 stars = [Star(screen) for i in range(constants.MAX_STARS)]
@@ -29,7 +34,6 @@ if TRAINING_AI:
 else:
     log_location_scores = constants.SCORES_LOG_HUMAN
     log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
-
 
 while running:
     # draw screen and score text
@@ -60,6 +64,7 @@ while running:
 
         # END GAME AND RESTART ON COLLISION
         if Player.drawing.collidelist([obstacle[x].drawing]) != -1:
+            change_music(constants.MENU_MUSIC)
             # update then show highscores
             highscores_list, highscore_rank = update_highscores(score, screen, log_location_scores, log_location_highscores)
             if TRAINING_AI == False:
@@ -72,6 +77,7 @@ while running:
             num_obstacles = constants.METEORS_MINIMUM
             Player.reset()
             coin_spawned = False
+            change_music(constants.INGAME_MUSIC)
 
 
     # poll for events

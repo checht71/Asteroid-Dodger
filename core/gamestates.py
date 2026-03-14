@@ -2,6 +2,7 @@ import pygame
 from core.constants import SCREEN_WIDTH, SCREEN_HEIGHT, FONT_COLOR, SCREEN_CENTER_X, SCREEN_CENTER_Y
 
 def show_start_screen(screen, FONT):
+    """TODO: UNUSED FUNCTION. NEEDS TO BE UPDATED TO SHOW MENU ON STARTUP"""
     text_surface = FONT.render("Press space bar to play again", True, FONT_COLOR)
     screen.blit(text_surface, (SCREEN_CENTER_X - 200,   SCREEN_CENTER_Y))
     pygame.display.flip()
@@ -62,7 +63,8 @@ def show_highscore_screen(screen, highscores_list, highscore_rank, FONT):
         score_display = FONT.render(f"{score_rank+1}. {highscores_list[score_rank].rstrip()}", True, FONT_COLOR)
         screen.blit(score_display, (SCREEN_CENTER_X-50, SCREEN_CENTER_Y+(score_rank*50)-150))
 
-    text_surface = FONT.render("Press space bar to play again", True, FONT_COLOR)
+    play_again_text = FONT.render("Press space bar to play again", True, FONT_COLOR)
+    screen.blit(play_again_text, (SCREEN_CENTER_X-225, SCREEN_CENTER_Y+100))
     
     pygame.display.flip()
     higscores_showing = True
