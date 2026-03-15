@@ -4,6 +4,8 @@ from core.entities import Meteor, Star, Player, Coin
 from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
 from core.music import change_music
+from core.functions import (draw_game_state, handle_coin_logic, handle_meteor_logic, 
+                       reset_game_state, handle_events, update_game_difficulty)
 
 
 # pygame setup
@@ -15,18 +17,23 @@ score = 0.0
 running = True
 dt = 0
 game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
+
 # Music setup
 pygame.mixer.init()
 pygame.mixer.music.load(constants.INGAME_MUSIC)
 pygame.mixer.music.play(-1)
+
 # Player init
 player_human = Player(screen)
 FONT = pygame.font.SysFont(constants.FONT_TYPE, constants.FONT_SIZE)
+
 # Sprite init
-obstacle = [Meteor(screen) for i in range(constants.METEORS_MAX)]
-num_obstacles = constants.METEORS_MINIMUM
+meteor = [Meteor(screen) for i in range(constants.METEORS_MAX)]
+num_meteors = constants.METEORS_MINIMUM
 stars = [Star(screen) for i in range(constants.MAX_STARS)]
 coin_spawned = False
+points_coin = None
+
 # AI setup
 TRAINING_AI = False
 if TRAINING_AI:
@@ -36,84 +43,44 @@ else:
     log_location_scores = constants.SCORES_LOG_HUMAN
     log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
 
-
+# Main game loop
 while running:
-    # draw screen and score text
-    screen.fill("black")
-    score_text = FONT.render(str(round(score)*10), True, constants.FONT_COLOR)
-    screen.blit(score_text, (10, 10))
+    # Draw game state
+    draw_game_state(screen, player_human, stars, meteor, num_meteors, points_coin, coin_spawned, score, FONT, dt, game_difficulty_speed)
 
-    # Add points and kill coin on collision
-    if coin_spawned:
-        points_coin.draw(coin_spawned)
-        points_coin.move(dt, game_difficulty_speed)
+    # Handle coin logic
+    score, coin_spawned = handle_coin_logic(coin_spawned, points_coin, player_human, dt, game_difficulty_speed, score)
 
-        # Add points and kill coin on collision
-        if player_human.drawing.collidelist([points_coin.drawing]) != -1:
-            score += points_coin.SCORE_VALUE
-            coin_spawned = False
+    # Handle meteor collision
+    if handle_meteor_logic(meteor, num_meteors, player_human, dt, game_difficulty_speed, score):
+        score = reset_game_state(player_human, meteor, num_meteors, score, screen, FONT, TRAINING_AI, log_location_scores, log_location_highscores)
+        game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
+        num_meteors = constants.METEORS_MINIMUM
+        coin_spawned = False
 
-
-    # draw and move entities
-    player_human.draw()
-    for astar in stars:
-        astar.draw()
-        astar.move(dt, game_difficulty_speed)
-
-    for x in range(num_obstacles):
-        obstacle[x].draw()
-        obstacle[x].move(dt, game_difficulty_speed)
-
-        # END GAME AND RESTART ON COLLISION
-        if player_human.drawing.collidelist([obstacle[x].drawing]) != -1:
-            change_music(constants.MENU_MUSIC)
-            # update then show highscores
-            highscores_list, highscore_rank = update_highscores(score, screen,
-            log_location_scores, log_location_highscores)
-            if TRAINING_AI == False:
-                show_highscore_screen(screen, highscores_list, highscore_rank, FONT)
-            # reset player_human and meteors
-            score = 0
-            for y in range(num_obstacles):
-                obstacle[y].reset()
-            game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
-            num_obstacles = constants.METEORS_MINIMUM
-            coin_spawned = False
-            change_music(constants.INGAME_MUSIC)
-            player_human.reset()
-
-
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
+    # Poll for events
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYUP:
-            if 'left shift'==pygame.key.name(event.key):
-                player_human.set_default_speed()
-    
-    #Input/Movement
+        running = handle_events(event, player_human)
+
+    # Input/Movement
     keys = pygame.key.get_pressed()
     player_human.check_movement(keys, dt, game_difficulty_speed)
-            
-    # flip() the display to put your work on screen
+
+    # Update display and timing
     pygame.display.flip()
-
-    # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
     dt = clock.tick(60) / 1000
-    score += constants.SCORE_PER_TICK
-    game_difficulty_speed += constants.GAME_SPEED_INCREASE_PER_TICK
 
-    # Time dependent events
-    # increase meteors every 500 points
-    if round(score,1)%50 == 0.0 and score >= 10.0 and num_obstacles < constants.METEORS_MAX:
-        num_obstacles +=1
-    
-    if round(score,1)%50 == 0.0:
-        if coin_spawned == False:
-            points_coin = Coin(screen)
-            coin_spawned = True
+    # Update game difficulty and spawn coins
+    score, game_difficulty_speed, num_meteors, coin_spawned, points_coin = update_game_difficulty(
+        score, num_meteors, game_difficulty_speed, dt, coin_spawned, points_coin, screen
+    )
 
-pygame.quit()
+""" TODO: Create seperate while loop for menu to fix bug where ship drifts during menu screen
+menu = True
+while menu:
+    highscores_list, highscore_rank = update_highscores(score, screen,
+    log_location_scores, log_location_highscores)
+    show_highscore_screen(screen, highscores_list, highscore_rank, FONT)
+"""
+
+#pygame.quit()
