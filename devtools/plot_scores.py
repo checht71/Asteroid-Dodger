@@ -1,7 +1,7 @@
 """This module imports every saved player score and plots all of them"""
 from matplotlib import pyplot as plt
 
-log_location_scores ="./highscores/scores_human.csv"
+log_location_scores ="../highscores/scores_human.csv"
 
 with open(log_location_scores, "r") as highscores_file:
     scores_list = highscores_file.readlines()

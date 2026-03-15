@@ -10,9 +10,9 @@ class Player():
     SIZE_X = 50
     SIZE_Y = 60
     SPEED_DEFAULT = 900
-    SPEED_MULTIPLIER_BOOSTED = 2.5
+    SPEED_MULTIPLIER_BOOSTED = 2
     SPEED_MULTIPLIER_DEFAULT = 1
-    SCREEN_BORDER_MARGIN = 50
+    SCREEN_BORDER_MARGIN = 100
 
     def __init__(self, screen):
         self.pos = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -48,7 +48,6 @@ class Player():
         if keys[pygame.K_LSHIFT]:
             self.speed_boost = Player.SPEED_MULTIPLIER_BOOSTED
             self.color = Player.COLOR_BOOSTED
-
 
 class Meteor():
     """Meteors are the objects you have to dodge to progress thru the game.
@@ -125,7 +124,6 @@ class Coin():
     DEFAULT_SPEED_DOWN = 300
     SCORE_VALUE = 50
 
-
     def __init__(self, screen):
         self.spawn_y = -randint(750, 1250)
         self.pos = pygame.Vector2(randint(0, SCREEN_WIDTH), self.spawn_y)
@@ -144,7 +142,6 @@ class Coin():
     def reset(self):
         """Move coin out of range at the game's end"""
         self.pos.y = self.spawn_y
-
 
     def is_touched(self, score):
         score += 50
