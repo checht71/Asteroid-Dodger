@@ -2,9 +2,11 @@ This file is to track what I learned during this project so I can include it in 
 
 Python Packages:
 - pygame
+- stable baseline 3
+- gymnasium
 
 Github:
-- Branches
+- branches
 - version control
 - naming convention
 - descriptive commit messages
@@ -21,3 +23,6 @@ Music Production:
 - Nexus
 - SoundToys
 
+LLMs:
+- leveraging LLMs correctly in projects
+- allowing AI to assist in code, but trusting instinct

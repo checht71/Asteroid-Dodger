@@ -5,7 +5,7 @@ from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
 from core.music import change_music
 from core.functions import (draw_game_state, handle_coin_logic, handle_meteor_logic, 
-                       reset_game_state, handle_events, update_game_difficulty)
+                       reset_game_state, handle_events, update_game_difficulty, check_coin_spawn)
 
 
 # pygame setup
@@ -43,6 +43,7 @@ else:
     log_location_scores = constants.SCORES_LOG_HUMAN
     log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
 
+
 # Main game loop
 while running:
     # Draw game state
@@ -70,10 +71,11 @@ while running:
     pygame.display.flip()
     dt = clock.tick(60) / 1000
 
-    # Update game difficulty and spawn coins
-    score, game_difficulty_speed, num_meteors, coin_spawned, points_coin = update_game_difficulty(
-        score, num_meteors, game_difficulty_speed, dt, coin_spawned, points_coin, screen
+    # Update game difficulty
+    score, game_difficulty_speed, num_meteors = update_game_difficulty(
+        score, num_meteors, game_difficulty_speed, dt
     )
+    coin_spawned, points_coin = check_coin_spawn(score, coin_spawned, points_coin, screen)
 
 """ TODO: Create seperate while loop for menu to fix bug where ship drifts during menu screen
 menu = True

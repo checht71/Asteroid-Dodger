@@ -68,20 +68,26 @@ def handle_events(event, player_human):
     if event.type == pygame.KEYUP:      # Reset player speed if LSHIFT is up
         if 'left shift' == pygame.key.name(event.key):
             player_human.set_default_speed()
+
     return True     # Loop keeps running
 
 
-def update_game_difficulty(score, num_meteors, game_difficulty_speed, dt, coin_spawned, points_coin, screen):
+def update_game_difficulty(score, num_meteors, game_difficulty_speed, dt):
     """Update score, difficulty, and spawn coins."""
     score += constants.SCORE_PER_TICK
     game_difficulty_speed += constants.GAME_SPEED_INCREASE_PER_TICK
 
-    if round(score, 1) % 50 == 0.0 and score >= 10.0 and num_meteors < constants.METEORS_MAX:
+    if round(score, 1) %constants.METEOR_SPAWN_TIME_INTERVAL == 0.0 and score >= 10.0 and num_meteors < constants.METEORS_MAX:
         num_meteors += 1
     
-    if round(score, 1) % 50 == 0.0:
+    return score, game_difficulty_speed, num_meteors
+
+
+def check_coin_spawn(score, coin_spawned, points_coin, screen):
+    """If score is a certain amount, spawn coin if it is not already spawned."""
+    if round(score, 1) % constants.COIN_SPAWN_TIME_INTERVAL == 0.0:
         if coin_spawned == False:
             points_coin = Coin(screen)
             coin_spawned = True
-    
-    return score, game_difficulty_speed, num_meteors, coin_spawned, points_coin
+
+    return coin_spawned, points_coin

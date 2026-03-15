@@ -16,10 +16,11 @@ GAME_DIFFICULTY_SPEED_STARTING = 1
 # Asteroid Behavior
 METEORS_MAX = 10
 METEORS_MINIMUM = 6
+METEOR_SPAWN_TIME_INTERVAL = 50 # score/10 before meteor spawns
 
 # Entity Behavior
 MAX_STARS = 50
-COIN_SPAWN_CHANCE = 360 # 1/x chance the score will spawn per frame. Higher = less likely
+COIN_SPAWN_TIME_INTERVAL = 50 # score/10 before coin has chance to spawn
 
 # Score log locations
 HIGHSCORES_LOG_HUMAN = "./highscores/highscores_human.csv"

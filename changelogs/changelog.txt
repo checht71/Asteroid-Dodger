@@ -31,3 +31,10 @@
 - add and implement coin
 3/1/26
 - fix highscores blurb not showing on high score record
+3/1/26 - 3/15/26
+- extract functions from main game loop for readability
+- add music
+- change some variable and folder names
+- add more constants, removed magic numbers
+- improve asteroid visuals
+- fix highscores blurb not showing on high score record (again)
