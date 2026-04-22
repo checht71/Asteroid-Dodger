@@ -62,7 +62,6 @@ class AsteroidDodger():
         self._draw_and_move_player()
         self._draw_and_move_stars()
         self._draw_move_and_check_obstacles()
-        self._handle_player_input()
         self._update_display()
         self._update_physics()
         self._check_difficulty_progression()
@@ -130,11 +129,6 @@ class AsteroidDodger():
             obstacle.reset()
         
         self.player_human.reset()
-
-    def _handle_player_input(self):
-        """Handle continuous player input and movement."""
-        keys = pygame.key.get_pressed()
-        self.player_human.check_movement(keys, self.dt, self.game_difficulty_speed)
 
     def _update_display(self):
         """Update the display."""

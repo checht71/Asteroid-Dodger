@@ -4,7 +4,7 @@ Python Packages:
 - pygame
 
 Github:
-- Branches
+- using branches
 - version control
 - naming convention
 - descriptive commit messages
@@ -20,4 +20,5 @@ Music Production:
 - FL Studio
 - Nexus
 - SoundToys
+- Serum
 
