@@ -19,6 +19,7 @@ METEORS_MINIMUM = 6
 
 # Entity Behavior
 MAX_STARS = 50
+COIN_ENABLED = False
 COIN_SPAWN_CHANCE = 360 # 1/x chance the score will spawn per frame. Higher = less likely
 
 # Score log locations

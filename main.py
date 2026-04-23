@@ -10,12 +10,11 @@ from core.music import change_music
 from game import AsteroidDodger
 
 
-player_ai = False
-player_human = True
+PLAYER_AI = True
+PLAYER_HUMAN = True
 
 
-
-game = AsteroidDodger(player_ai, player_human)
+game = AsteroidDodger(PLAYER_AI, PLAYER_HUMAN)
 
 while True:
 
@@ -31,18 +30,20 @@ while True:
 
     keys = pygame.key.get_pressed()
 
-    """
-    if keys[pygame.K_w]:
+    # Handle AI input
+    if keys[pygame.K_i]:
         action = 1
-    if keys[pygame.K_s]:
+    if keys[pygame.K_k]:
         action = 2
-    if keys[pygame.K_a]:
+    if keys[pygame.K_j]:
         action = 3
-    if keys[pygame.K_d]:
+    if keys[pygame.K_l]:
         action = 4
-    """
 
-    game.player_human.check_movement(keys, game.dt, game.game_difficulty_speed)
-
+    if PLAYER_HUMAN:
+        game.player_human.check_movement(keys, game.dt, game.game_difficulty_speed)
+    
+    if PLAYER_AI:
+        game.player_ai.check_movement(action, game.dt, game.game_difficulty_speed)
 
     game.step(action=action)

@@ -3,7 +3,7 @@ from random import randint
 from core.entities.coin import Coin
 from core.entities.star import Star
 from core.entities.meteor import Meteor
-from core.entities.player import Player
+from core.entities.player import Player, Player_AI
 from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
 from core.music import change_music
@@ -11,20 +11,25 @@ from core.music import change_music
 
 class AsteroidDodger():
 
-    def __init__(self, player_ai, player_human):
+    def __init__(self, PLAYER_AI, PLAYER_HUMAN):
         self._init_pygame()
         self._init_audio()
-        self._init_player()
+        self._init_player(PLAYER_AI, PLAYER_HUMAN)
         self._init_sprites()
         self._init_ai()
 
     def _init_pygame(self):
-        """Initialize pygame display and clock."""
+        """Initialize pygame display, clock and game state vars."""
         pygame.init()
         pygame.display.set_caption('Asteroid Belt')
         self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.FONT = pygame.font.SysFont(constants.FONT_TYPE, constants.FONT_SIZE)
+
+        self.score = 0.0
+        self.running = True
+        self.dt = 0
+        self.game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
 
     def _init_audio(self):
         """Initialize audio and load music."""
@@ -32,13 +37,17 @@ class AsteroidDodger():
         pygame.mixer.music.load(constants.INGAME_MUSIC)
         pygame.mixer.music.play(-1)
 
-    def _init_player(self):
-        """Initialize player and game state variables."""
-        self.player_human = Player(self.screen)
-        self.score = 0.0
-        self.running = True
-        self.dt = 0
-        self.game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
+    def _init_player(self, PLAYER_AI, PLAYER_HUMAN):
+        """Initialize human and AI players."""
+        self.players = []
+        
+        if PLAYER_HUMAN:
+            self.player_human = Player(self.screen)
+            self.players.append(self.player_human)
+        
+        if PLAYER_AI:
+            self.player_ai = Player_AI(self.screen)
+            self.players.append(self.player_ai)
 
     def _init_sprites(self):
         """Initialize obstacles, stars, and coins."""
@@ -60,12 +69,6 @@ class AsteroidDodger():
 
     def step(self, action):
         """Main game loop step."""
-        up = True if action == 1 else False
-        down = True if action == 2 else False
-        left = True if action == 3 else False
-        right = True if action == 4 else False
-
-
 
         self._draw_background_and_score()
         self._update_coin()
@@ -83,18 +86,21 @@ class AsteroidDodger():
         self.screen.blit(self.score_text, (10, 10))
 
     def _update_coin(self):
-        """Update coin position and check for collision with player."""
+        """Update coin position and check for collision with any player."""
         if self.coin_spawned:
             self.points_coin.draw(self.coin_spawned)
             self.points_coin.move(self.dt, self.game_difficulty_speed)
 
-            if self.player_human.drawing.collidelist([self.points_coin.drawing]) != -1:
-                self.score += self.points_coin.SCORE_VALUE
-                self.coin_spawned = False
+            for player in self.players:
+                if player.drawing.collidelist([self.points_coin.drawing]) != -1:
+                    self.score += self.points_coin.SCORE_VALUE
+                    self.coin_spawned = False
+                    return
 
     def _draw_and_move_player(self):
-        """Draw and update player position."""
-        self.player_human.draw()
+        """Draw and update all active players."""
+        for player in self.players:
+            player.draw()
 
     def _draw_and_move_stars(self):
         """Draw and move all stars."""
@@ -103,13 +109,15 @@ class AsteroidDodger():
             astar.move(self.dt, self.game_difficulty_speed)
 
     def _draw_move_and_check_obstacles(self):
-        """Draw, move obstacles, and check for collision with player."""
+        """Draw, move obstacles, and check for collision with players."""
         for x in range(self.num_obstacles):
             self.obstacle[x].draw()
             self.obstacle[x].move(self.dt, self.game_difficulty_speed)
 
-            if self.player_human.drawing.collidelist([self.obstacle[x].drawing]) != -1:
-                self._handle_game_over()
+            for player in self.players:
+                if player.drawing.collidelist([self.obstacle[x].drawing]) != -1:
+                    self._handle_game_over()
+                    return
 
     def _handle_game_over(self):
         """Handle collision and game over sequence."""
@@ -138,7 +146,8 @@ class AsteroidDodger():
         for obstacle in self.obstacle:
             obstacle.reset()
         
-        self.player_human.reset()
+        for player in self.players:
+            player.reset()
 
     def _update_display(self):
         """Update the display."""
@@ -153,7 +162,8 @@ class AsteroidDodger():
     def _check_difficulty_progression(self):
         """Check for difficulty increases and spawn coins."""
         self._increase_obstacle_count()
-        self._spawn_coin()
+        if constants.COIN_ENABLED: 
+            self._spawn_coin()
 
     def _increase_obstacle_count(self):
         """Increase obstacle count based on score."""
