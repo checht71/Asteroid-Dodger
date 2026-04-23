@@ -1,6 +1,9 @@
 import pygame
 from random import randint
-from core.entities import Meteor, Star, Player, Coin
+from core.entities.coin import Coin
+from core.entities.star import Star
+from core.entities.meteor import Meteor
+from core.entities.player import Player
 from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
 from core.music import change_music
@@ -8,7 +11,7 @@ from core.music import change_music
 
 class AsteroidDodger():
 
-    def __init__(self):
+    def __init__(self, player_ai, player_human):
         self._init_pygame()
         self._init_audio()
         self._init_player()
@@ -55,8 +58,15 @@ class AsteroidDodger():
             self.log_location_scores = constants.SCORES_LOG_HUMAN
             self.log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
 
-    def step(self):
+    def step(self, action):
         """Main game loop step."""
+        up = True if action == 1 else False
+        down = True if action == 2 else False
+        left = True if action == 3 else False
+        right = True if action == 4 else False
+
+
+
         self._draw_background_and_score()
         self._update_coin()
         self._draw_and_move_player()
