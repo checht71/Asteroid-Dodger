@@ -16,6 +16,9 @@ PLAYER_HUMAN = True
 
 game = AsteroidDodger(PLAYER_AI, PLAYER_HUMAN)
 
+
+observation, reward = game._reset_game()
+
 while True:
 
     action = 0
@@ -46,4 +49,5 @@ while True:
     if PLAYER_AI:
         game.player_ai.check_movement(action, game.dt, game.game_difficulty_speed)
 
-    game.step(action=action)
+    observation, reward, done, truncated = game.step(action=action)
+    print(reward)
