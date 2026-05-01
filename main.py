@@ -50,4 +50,4 @@ while True:
         game.player_ai.check_movement(action, game.dt, game.game_difficulty_speed)
 
     observation, reward, done, truncated = game.step(action=action)
-    print(reward)
+    

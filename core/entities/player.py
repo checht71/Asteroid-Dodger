@@ -59,8 +59,11 @@ class Player_AI(Player):
 
     def __init__(self, screen):
         self.pos = pygame.Vector2(Player_AI.SPAWN_LOCATION_X, Player_AI.SPAWN_LOCATION_Y)
-        self.color = Player_AI.COLOR_DEFAULT
         self.screen = screen
+    
+    def draw(self):
+        self.drawing = pygame.draw.rect(self.screen, Player_AI.COLOR_DEFAULT, 
+        (self.pos.x, self.pos.y, Player.SIZE_X, Player.SIZE_Y))
 
     def check_movement(self, action, dt, game_difficulty_speed):
 
