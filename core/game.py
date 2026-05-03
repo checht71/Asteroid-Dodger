@@ -90,7 +90,7 @@ class AsteroidDodger():
             self.total_frames += 1
         self.done = False
 
-        reward, truncated = 0, False
+        reward, truncated = 1, False
 
         self._draw_background_and_score()
         self._update_coin()
@@ -150,7 +150,6 @@ class AsteroidDodger():
 
     def _draw_move_and_check_obstacles(self):
         """Draw, move obstacles, and check for collision with players."""
-        reward = 1  # Default reward for no collision
         
         for x in range(self.num_obstacles):
             self.obstacle[x].draw()
@@ -164,6 +163,8 @@ class AsteroidDodger():
                     else:
                         self._handle_game_over()
                         return 0
+        
+        return 1
     
 
     def _handle_game_over(self):
