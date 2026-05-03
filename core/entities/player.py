@@ -7,13 +7,13 @@ class Player():
 
     COLOR_DEFAULT = "white"
     COLOR_BOOSTED = "blue"
-    SIZE_X = 50
-    SIZE_Y = 60
+    SIZE_X = 25
+    SIZE_Y = 80
     SPEED_DEFAULT = 900
     SPEED_MULTIPLIER_BOOSTED = 2
     SPEED_MULTIPLIER_DEFAULT = 1
     SCREEN_BORDER_MARGIN = 100
-
+    PLAYER_IMG = pygame.transform.scale_by(pygame.image.load("./assets/sprites/ship_player.png"),(5, 5))
     def __init__(self, screen):
         self.pos = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.color = Player.COLOR_DEFAULT
@@ -22,6 +22,7 @@ class Player():
 
     def draw(self):
         self.drawing = pygame.draw.rect(self.screen, self.color, (self.pos.x, self.pos.y, Player.SIZE_X, Player.SIZE_Y))
+        self.sprite = self.screen.blit(Player.PLAYER_IMG, (self.pos.x-60, self.pos.y-25))
 
     def reset(self):
         self.pos = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -57,6 +58,7 @@ class Player_AI(Player):
     SPAWN_LOCATION_X = SCREEN_WIDTH/2 + SPAWN_OFFSET_X
     SPAWN_LOCATION_Y = SCREEN_HEIGHT/2
     SCREEN_BORDER_MARGIN = 200
+    PLAYER_IMG = pygame.transform.scale_by(pygame.image.load("./assets/sprites/ship_enemy.png"),(5, 5))
 
     def __init__(self, screen):
         self.pos = pygame.Vector2(Player_AI.SPAWN_LOCATION_X, Player_AI.SPAWN_LOCATION_Y)
@@ -65,6 +67,7 @@ class Player_AI(Player):
     def draw(self):
         self.drawing = pygame.draw.rect(self.screen, Player_AI.COLOR_DEFAULT, 
         (self.pos.x, self.pos.y, Player.SIZE_X, Player.SIZE_Y))
+        self.sprite = self.screen.blit(Player_AI.PLAYER_IMG, (self.pos.x-60, self.pos.y-25))
 
     def check_movement(self, action, dt, game_difficulty_speed):
 
