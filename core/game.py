@@ -7,6 +7,7 @@ from core.entities.player import Player, Player_AI
 from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
 from core.music import change_music
+import AI.hyperparameters
 import numpy as np
 import cv2
 import torch
@@ -19,6 +20,7 @@ class AsteroidDodger():
     def __init__(self, AI_PLAYING, HUMAN_PLAYING, training=False):
         self.AI_TRAINING = training
         self.AI_PLAYING = AI_PLAYING
+        self.HIDE_SCREEN = AI.hyperparameters.HIDE_SCREEN
         if AI_PLAYING or self.AI_TRAINING:
             self._init_ai()
         self._init_pygame()
@@ -79,8 +81,8 @@ class AsteroidDodger():
         self.done = False
         self.total_frames = 0
         self.action_space = gym.spaces.Discrete(4)
-        #if self.AI_TRAINING:
-            #os.environ["SDL_VIDEODRIVER"] = "dummy"
+        if self.HIDE_SCREEN:
+            os.environ["SDL_VIDEODRIVER"] = "dummy"
 
     
     
@@ -101,7 +103,7 @@ class AsteroidDodger():
         self._update_physics()
         self._check_difficulty_progression()
 
-        if self.AI_TRAINING:
+        if self.AI_TRAINING or self.AI_PLAYING:
             self.player_ai.check_movement(action, self.dt, self.game_difficulty_speed)
 
         return reward, self.done, truncated
@@ -159,14 +161,13 @@ class AsteroidDodger():
                 if player.drawing.collidelist([self.obstacle[x].drawing]) != -1:
                     # Collision detected
                     if self.AI_TRAINING:
-                        return -1
+                        return AI.hyperparameters.reward_punishment
                     else:
                         self._handle_game_over()
                         return 0
         
         return 1
     
-
     def _handle_game_over(self):
         """Handle collision and game over sequence."""
         if not self.AI_TRAINING:

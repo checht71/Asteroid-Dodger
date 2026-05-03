@@ -56,6 +56,7 @@ class Player_AI(Player):
     SPAWN_OFFSET_X = 50
     SPAWN_LOCATION_X = SCREEN_WIDTH/2 + SPAWN_OFFSET_X
     SPAWN_LOCATION_Y = SCREEN_HEIGHT/2
+    SCREEN_BORDER_MARGIN = 200
 
     def __init__(self, screen):
         self.pos = pygame.Vector2(Player_AI.SPAWN_LOCATION_X, Player_AI.SPAWN_LOCATION_Y)
@@ -78,11 +79,11 @@ class Player_AI(Player):
             if self.pos.y >= 0:
                 self.pos.y -= Player_speed
         if down:
-            if self.pos.y <= SCREEN_HEIGHT - Player.SCREEN_BORDER_MARGIN:
+            if self.pos.y <= SCREEN_HEIGHT - Player_AI.SCREEN_BORDER_MARGIN:
                 self.pos.y += Player_speed
         if left:
-            if self.pos.x >= 0:
+            if self.pos.x >= Player_AI.SCREEN_BORDER_MARGIN:
                 self.pos.x -= Player_speed
         if right:
-            if self.pos.x <= SCREEN_WIDTH - Player.SCREEN_BORDER_MARGIN:
+            if self.pos.x <= SCREEN_WIDTH - Player_AI.SCREEN_BORDER_MARGIN:
                 self.pos.x += Player_speed

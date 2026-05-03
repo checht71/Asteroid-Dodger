@@ -85,7 +85,7 @@ class Agent():
                 state = next_state
 
                 episode_reward += reward
-                print(episode_reward)
+                #print(episode_reward)
                 episode_steps += 1
                 total_steps += 1
 
