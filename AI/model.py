@@ -9,7 +9,7 @@ import torch.nn.functional as F
 
 
 class RocketNet(nn.Module):
-    """DQN target netork"""
+    """DQN netork"""
     def __init__(self, action_dim, hidden_dim=1024, dropout = 0, observation_shape=None):
         super(RocketNet, self).__init__()
 

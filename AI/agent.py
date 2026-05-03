@@ -16,7 +16,7 @@ from AI.hyperparameters import buffer_max_size
 class Agent():
 
     def __init__(self, env : AsteroidDodger, dropout, hidden_layer, learning_rate, step_repeat, gamma):
-        """Initialize the DDQN agent with two models, optimizers, and a replay buffer."""
+        """Initialize the DQN agent with one model, optimizers, and a replay buffer."""
         self.env = env
 
         self.step_repeat = step_repeat
@@ -31,17 +31,12 @@ class Agent():
 
         self.memory = ReplayBuffer(max_size=buffer_max_size, input_shape=observation.shape, n_actions=env.action_space.n, device=self.device)
 
-        self.model_1 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)
-        self.model_2 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
-        
-        self.target_model_1 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
-        self.target_model_2 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
+        self.model = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)
+        self.target_model = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
 
-        hard_update(self.target_model_1, self.model_1)
-        hard_update(self.target_model_2, self.model_2)
+        hard_update(self.target_model, self.model)
 
-        self.optimizer_1 = optim.Adam(self.model_1.parameters(), lr=learning_rate)
-        self.optimizer_2 = optim.Adam(self.model_2.parameters(), lr=learning_rate)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
 
         self.learning_rate = learning_rate
 
@@ -73,9 +68,7 @@ class Agent():
                 if random.random() < epsilon:
                     action = self.env.action_space.sample()
                 else:
-                    q_values_1 = self.model_1.forward(state.unsqueeze(0).to(self.device))[0]
-                    q_values_2 = self.model_2.forward(state.unsqueeze(0).to(self.device))[0]
-                    q_values = torch.min(q_values_1, q_values_2)
+                    q_values = self.model.forward(state.unsqueeze(0).to(self.device))[0]
                     action = torch.argmax(q_values, dim=-1).item()
                 
                 next_state, reward, done, _ = self.env.ai_step(action=action, repeat=self.step_repeat)
@@ -95,47 +88,35 @@ class Agent():
                     dones = dones.unsqueeze(1).float()
 
                     # Current Q values from both models
-                    q_values_1 = self.model_1(states)
-                    q_values_2 = self.model_2(states)
+                    q_values = self.model(states)
                     actions = actions.unsqueeze(1).long()
-                    qsa_b_1 = q_values_1.gather(1, actions)
-                    qsa_b_2 = q_values_2.gather(1, actions)
+                    qsa_b = q_values.gather(1, actions)
 
                     # Action selection using main models. 
-                    next_actions_1 = torch.argmax(self.model_1(next_states), dim=1, keepdim=True)
-                    next_actions_2 = torch.argmax(self.model_2(next_states), dim=1, keepdim=True)
+                    next_actions = torch.argmax(self.model(next_states), dim=1, keepdim=True)
 
-                    next_q_values_1 = self.target_model_1(next_states).gather(1, next_actions_1)
-                    next_q_values_2 = self.target_model_2(next_states).gather(1, next_actions_2)
-                    
+                    next_q_values = self.target_model(next_states).gather(1, next_actions)
+
                     # Take the minimum of the next Q values
-                    next_q_values = torch.min(next_q_values_1, next_q_values_2)
 
                     # Compute the target value using DQN
                     target_b = rewards.unsqueeze(1) + (1 - done) * self.gamma * next_q_values
 
                     # Compute Loss
-                    loss_1 = F.smooth_l1_loss(qsa_b_1, target_b.detach())
-                    loss_2 = F.smooth_l1_loss(qsa_b_2, target_b.detach())
+                    loss = F.smooth_l1_loss(qsa_b, target_b.detach())
 
-                    writer.add_scalar("Loss/Model_1", loss_1.item(), total_steps)
-                    writer.add_scalar("Loss/Model_2", loss_2.item(), total_steps)
+                    writer.add_scalar("Loss/Model", loss.item(), total_steps)
 
                     # Backprop
-                    self.model_1.zero_grad()
-                    loss_1.backward()
-                    self.optimizer_1.step()
+                    self.model.zero_grad()
+                    loss.backward()
+                    self.optimizer.step()
                     
-                    self.model_2.zero_grad()
-                    loss_2.backward()
-                    self.optimizer_2.step()
                     
                     if episode_steps % 4 == 0:
-                        soft_update(self.target_model_1, self.model_1)
-                        soft_update(self.target_model_2, self.model_2)
+                        soft_update(self.target_model, self.model)
 
-            self.model_1.save_the_model(filename='models/dqn1.pt')
-            self.model_2.save_the_model(filename='models/dqn2.pt')
+            self.model.save_the_model(filename='models/dqn1.pt')
             writer.add_scalar('Score', episode_reward, episode)
             writer.add_scalar('Epsilon', epsilon, episode)
 

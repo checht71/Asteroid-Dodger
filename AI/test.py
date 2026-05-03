@@ -19,14 +19,12 @@ agent = Agent(env, dropout=dropout, hidden_layer=hidden_layer,
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu' 
 
-model1 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, observation_shape=observation.shape).to(device)
-model2 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, observation_shape=observation.shape).to(device)
+model = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, observation_shape=observation.shape).to(device)
 
-model1.load_the_model(filename='models/dqn1.pt')
-model2.load_the_model(filename='models/dqn2.pt')
+model.load_the_model(filename='models/dqn1.pt')
 
-model1.eval()
-model2.eval()
+
+model.eval()
 
 for episode in range(episodes):
     done = False
@@ -40,8 +38,7 @@ for episode in range(episodes):
         if random.random() < epsilon:
             action = env.action_space.sample()
         else:
-            model1_q_values = model1.forward(state.unsqueeze(0).to(device))[0]
-            model2_q_values = model2.forward(state.unsqueeze(0).to(device))[0]
+            model1_q_values = model.forward(state.unsqueeze(0).to(device))[0]
 
             q_values = torch.min(model1_q_values, model2_q_values)
 
