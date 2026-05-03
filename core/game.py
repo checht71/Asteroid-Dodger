@@ -10,17 +10,22 @@ from core.music import change_music
 import numpy as np
 import cv2
 import torch
-
+import gymnasium as gym
+import os
 
 class AsteroidDodger():
 
     # init
-    def __init__(self, PLAYER_AI, PLAYER_HUMAN):
+    def __init__(self, AI_PLAYING, HUMAN_PLAYING, training=False):
+        self.AI_TRAINING = training
+        if AI_PLAYING or AI_TRAINING:
+            self._init_ai()
         self._init_pygame()
-        self._init_audio()
-        self._init_player(PLAYER_AI, PLAYER_HUMAN)
+        self._init_player(AI_PLAYING, HUMAN_PLAYING)
         self._init_sprites()
-        self._init_ai()
+        self._init_log()
+        if HUMAN_PLAYING:
+            self._init_audio()
 
     def _init_pygame(self):
         """Initialize pygame display, clock and game state vars."""
@@ -29,7 +34,6 @@ class AsteroidDodger():
         self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.FONT = pygame.font.SysFont(constants.FONT_TYPE, constants.FONT_SIZE)
-
         self.score = 0.0
         self.running = True
         self.dt = 0
@@ -41,15 +45,15 @@ class AsteroidDodger():
         pygame.mixer.music.load(constants.INGAME_MUSIC)
         pygame.mixer.music.play(-1)
 
-    def _init_player(self, PLAYER_AI, PLAYER_HUMAN):
+    def _init_player(self, AI_PLAYING, HUMAN_PLAYING):
         """Initialize human and AI players."""
         self.players = []
         
-        if PLAYER_HUMAN:
+        if HUMAN_PLAYING:
             self.player_human = Player(self.screen)
             self.players.append(self.player_human)
         
-        if PLAYER_AI:
+        if AI_PLAYING:
             self.player_ai = Player_AI(self.screen)
             self.players.append(self.player_ai)
 
@@ -61,20 +65,24 @@ class AsteroidDodger():
         self.coin_spawned = False
         self.points_coin = None
 
-    def _init_ai(self):
-        """Initialize AI logging paths."""
-        self.TRAINING_AI = False
-        if self.TRAINING_AI:
+    def _init_log(self):
+        """Point to the locations we are saving highscores"""
+        if self.AI_TRAINING:
             self.log_location_scores = constants.SCORES_LOG_AI
             self.log_location_highscores = constants.HIGHSCORES_LOG_AI
         else:
             self.log_location_scores = constants.SCORES_LOG_HUMAN
             self.log_location_highscores = constants.HIGHSCORES_LOG_HUMAN
-        
+
+    def _init_ai(self):
         self.done = False
         self.total_frames = 0
+        self.action_space = gym.spaces.Discrete(4)
+        #if self.AI_TRAINING:
+            #os.environ["SDL_VIDEODRIVER"] = "dummy"
 
-    # loop
+    
+    
     def step(self, action):
         """Main game loop step."""
 
@@ -87,24 +95,28 @@ class AsteroidDodger():
         self._update_coin()
         self._draw_and_move_player()
         self._draw_and_move_stars()
-        self._draw_move_and_check_obstacles()
+        reward = self._draw_move_and_check_obstacles()
         self._update_display()
         self._update_physics()
         self._check_difficulty_progression()
 
+        if self.AI_TRAINING:
+            self.player_ai.check_movement(action, self.dt, self.game_difficulty_speed)
 
-        reward = self.score
-        return self._get_obs(), reward, self.done, truncated
+        return reward, self.done, truncated
 
-    """ From part 9. I don't think I need to repeat steps.
-        def ai_step(self, action, repeat=4):
-            total_reward = 0
 
-            for i in range(repeat):
-                reward, done, truncated = self.step(action)
-            
-            total_reward = reward
-    """
+    def ai_step(self, action, repeat=4):
+        """This feeds the AI agent 1/repeat frames"""
+        total_reward = 0
+
+        for i in range(repeat):
+            reward, done, truncated = self.step(action)
+        
+        total_reward = reward
+    
+        return self._get_obs(), total_reward, self.done, truncated
+
 
     def _draw_background_and_score(self):
         """Draw background and render score text."""
@@ -143,12 +155,20 @@ class AsteroidDodger():
 
             for player in self.players:
                 if player.drawing.collidelist([self.obstacle[x].drawing]) != -1:
-                    self._handle_game_over()
-                    return
+                    if self.AI_TRAINING:
+                        reward = -1
+                        return reward
+                    else:
+                        self._handle_game_over()
+                        return 0
+                else:
+                    reward = 1
+                    return reward
 
     def _handle_game_over(self):
         """Handle collision and game over sequence."""
-        change_music(constants.MENU_MUSIC)
+        if not self.AI_TRAINING:
+            change_music(constants.MENU_MUSIC)
         self.done = True
         
         highscores_list, highscore_rank = update_highscores(
@@ -158,13 +178,14 @@ class AsteroidDodger():
             self.log_location_highscores
         )
         
-        if not self.TRAINING_AI:
+        if not self.AI_TRAINING:
             show_highscore_screen(self.screen, highscores_list, highscore_rank, self.FONT)
-        
-        self._reset_game()
-        change_music(constants.INGAME_MUSIC)
+            change_music(constants.INGAME_MUSIC)
 
-    def _reset_game(self):
+        self.reset_game()
+
+
+    def reset_game(self):
         """Reset all game state variables and entities."""
         self.score = 0
         self.game_difficulty_speed = constants.GAME_DIFFICULTY_SPEED_STARTING
@@ -210,7 +231,6 @@ class AsteroidDodger():
             self.points_coin = Coin(self.screen)
             self.coin_spawned = True
 
-
     def _get_obs(self):
         screen_array = pygame.surfarray.pixels3d(self.screen)
         screen_array = np.transpose(screen_array, (1, 0, 2))
@@ -219,7 +239,8 @@ class AsteroidDodger():
         # Save the image (Debugging purposes)
         # cv2.imwrite('screenshot.png', downscaled_image)
 
+        grayscale = cv2.cvtColor(downscaled_image, cv2.COLOR_RGB2GRAY)
 
-        observation = torch.from_numpy(downscaled_image).float().unsqueeze(0)
+        observation = torch.from_numpy(grayscale).float().unsqueeze(0)
 
         return observation

@@ -7,17 +7,17 @@ from core.entities.player import Player
 from core.gamestates import show_highscore_screen, update_highscores
 import core.constants as constants
 from core.music import change_music
-from game import AsteroidDodger
+from core.game import AsteroidDodger
 
 
-PLAYER_AI = True
-PLAYER_HUMAN = True
+AI_PLAYING = False
+HUMAN_PLAYING = True
 
 
-game = AsteroidDodger(PLAYER_AI, PLAYER_HUMAN)
+game = AsteroidDodger(AI_PLAYING, HUMAN_PLAYING)
 
 
-observation, reward = game._reset_game()
+observation, reward = game.reset_game()
 
 while True:
 
@@ -43,10 +43,10 @@ while True:
     if keys[pygame.K_l]:
         action = 4
 
-    if PLAYER_HUMAN:
+    if HUMAN_PLAYING:
         game.player_human.check_movement(keys, game.dt, game.game_difficulty_speed)
     
-    if PLAYER_AI:
+    if AI_PLAYING:
         game.player_ai.check_movement(action, game.dt, game.game_difficulty_speed)
 
     observation, reward, done, truncated = game.step(action=action)

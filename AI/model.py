@@ -2,16 +2,16 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# ZombieNet
+# RocketNet
 # 4 CNN
 # 3 FC layers
 # Output = action dim (0, 0, 1, 0, 0 , 0) 
 
 
-class SpaceNet(nn.Module):
+class RocketNet(nn.Module):
     """DQN target netork"""
     def __init__(self, action_dim, hidden_dim=1024, dropout = 0, observation_shape=None):
-        super(ZombieNet, self).__init__()
+        super(RocketNet, self).__init__()
 
         # Convolutional Layers 
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=4, stride=2)

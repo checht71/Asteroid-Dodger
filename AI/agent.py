@@ -1,5 +1,5 @@
-from model import ZombieNet, hard_update, soft_update
-from buffer import ReplayBuffer
+from AI.model import RocketNet, hard_update, soft_update
+from AI.buffer import ReplayBuffer
 import torch
 import torch.optim as optim
 import torch.nn.functional as F
@@ -8,8 +8,9 @@ import time
 from torch.utils.tensorboard import SummaryWriter
 import random
 import os
-from game import AsteroidDodger
+from core.game import AsteroidDodger
 from pympler import asizeof
+from AI.hyperparameters import buffer_max_size
 
 
 class Agent():
@@ -22,19 +23,19 @@ class Agent():
 
         self.gamma = gamma
 
-        observation, info = self.env.reset()
+        observation, info = self.env.reset_game()
 
         self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
         print("Model loaded on: ", self.device)
 
-        self.memory = ReplayBuffer(max_size=500000, input_shape=observation.shape, n_actions=env.action_space.n, device=self.device)
+        self.memory = ReplayBuffer(max_size=buffer_max_size, input_shape=observation.shape, n_actions=env.action_space.n, device=self.device)
 
-        self.model_1 = ZombieNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)
-        self.model_2 = ZombieNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
+        self.model_1 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)
+        self.model_2 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
         
-        self.target_model_1 = ZombieNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
-        self.target_model_2 = ZombieNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
+        self.target_model_1 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
+        self.target_model_2 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, dropout=dropout, observation_shape=observation.shape).to(self.device)  
 
         hard_update(self.target_model_1, self.model_1)
         hard_update(self.target_model_2, self.model_2)
@@ -62,7 +63,7 @@ class Agent():
 
             done = False
             episode_reward = 0
-            state, info = self.env.reset()
+            state, info = self.env.reset_game()
             episode_steps = 0
 
             episode_start_time = time.time()
@@ -77,14 +78,14 @@ class Agent():
                     q_values = torch.min(q_values_1, q_values_2)
                     action = torch.argmax(q_values, dim=-1).item()
                 
-                next_state, reward, done, _, _ = self.env.step(action=action, repeat=self.step_repeat)
+                next_state, reward, done, _ = self.env.ai_step(action=action, repeat=self.step_repeat)
 
                 self.memory.store_transition(state, action, reward, next_state, done)
 
                 state = next_state
 
                 episode_reward += reward
-
+                print(episode_reward)
                 episode_steps += 1
                 total_steps += 1
 
@@ -135,7 +136,6 @@ class Agent():
 
             self.model_1.save_the_model(filename='models/dqn1.pt')
             self.model_2.save_the_model(filename='models/dqn2.pt')
-
             writer.add_scalar('Score', episode_reward, episode)
             writer.add_scalar('Epsilon', epsilon, episode)
 

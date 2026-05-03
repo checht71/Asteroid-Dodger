@@ -30,5 +30,5 @@ SCORES_LOG_AI = "./highscores/scores_ai.csv"
 
 
 # Music
-INGAME_MUSIC = "./assets/music/arcade_2.mp3"
+INGAME_MUSIC = "./assets/music/extrastellar_3.mp3"
 MENU_MUSIC = "./assets/music/star_crusader.mp3"
