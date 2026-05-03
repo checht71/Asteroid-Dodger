@@ -14,15 +14,18 @@ class Player():
     SPEED_MULTIPLIER_DEFAULT = 1
     SCREEN_BORDER_MARGIN = 100
     PLAYER_IMG = pygame.transform.scale_by(pygame.image.load("./assets/sprites/ship_player.png"),(5, 5))
+    PLAYER_IMG_BOOSTED = pygame.transform.scale_by(pygame.image.load("./assets/sprites/ship_player_boosted.png"),(5, 5))
+    
     def __init__(self, screen):
         self.pos = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.color = Player.COLOR_DEFAULT
         self.speed_boost = Player.SPEED_MULTIPLIER_DEFAULT
         self.screen = screen
+        self.sprite_img = Player.PLAYER_IMG
 
     def draw(self):
         self.drawing = pygame.draw.rect(self.screen, self.color, (self.pos.x, self.pos.y, Player.SIZE_X, Player.SIZE_Y))
-        self.sprite = self.screen.blit(Player.PLAYER_IMG, (self.pos.x-60, self.pos.y-25))
+        self.sprite = self.screen.blit(self.sprite_img, (self.pos.x-60, self.pos.y-25))
 
     def reset(self):
         self.pos = pygame.Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -49,6 +52,10 @@ class Player():
         if keys[pygame.K_LSHIFT]:
             self.speed_boost = Player.SPEED_MULTIPLIER_BOOSTED
             self.color = Player.COLOR_BOOSTED
+            self.sprite_img = Player.PLAYER_IMG_BOOSTED
+        if not keys[pygame.K_LSHIFT]:
+            self.sprite_img = Player.PLAYER_IMG
+
 
 
 

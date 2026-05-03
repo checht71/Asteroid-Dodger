@@ -13,9 +13,18 @@ from AI.model import RocketNet
 from AI.hyperparameters import *
 import torch
 import random
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', '--solo', action='store_true')
+args = parser.parse_args()
+
+if args.solo:
+    AI_PLAYING = False
+else:
+    AI_PLAYING = True
 
 
-AI_PLAYING = True
 HUMAN_PLAYING = True
 
 
@@ -40,18 +49,10 @@ def load_model(game):
 
 
 game = AsteroidDodger(AI_PLAYING, HUMAN_PLAYING)
-model = load_model(game)
+if AI_PLAYING:
+    model = load_model(game)
 
 while True:
-
-    action = 0
-    if random.random() < epsilon:
-        action = game.action_space.sample()
-    else:
-        q_values = model.forward(state.unsqueeze(0).to(device))[0]
-
-
-        action = torch.argmax(q_values, dim=-1, keepdim=True)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -63,22 +64,34 @@ while True:
 
     keys = pygame.key.get_pressed()
 
-    # Handle AI input
-    if keys[pygame.K_i]:
-        action = 1
-    if keys[pygame.K_k]:
-        action = 2
-    if keys[pygame.K_j]:
-        action = 3
-    if keys[pygame.K_l]:
-        action = 4
+    if AI_PLAYING:
+        action = 0
+        if random.random() < epsilon:
+            action = game.action_space.sample()
+        else:
+            q_values = model.forward(state.unsqueeze(0).to(device))[0]
+
+
+            action = torch.argmax(q_values, dim=-1, keepdim=True)
+
+        # Handle AI input
+        if keys[pygame.K_i]:
+            action = 1
+        if keys[pygame.K_k]:
+            action = 2
+        if keys[pygame.K_j]:
+            action = 3
+        if keys[pygame.K_l]:
+            action = 4
+
+        game.player_ai.check_movement(action, game.dt, game.game_difficulty_speed)
 
     if HUMAN_PLAYING:
         game.player_human.check_movement(keys, game.dt, game.game_difficulty_speed)
-    
-    if AI_PLAYING:
-        game.player_ai.check_movement(action, game.dt, game.game_difficulty_speed)
 
+    if not AI_PLAYING:
+        action = 0
+   
     reward, done, truncated = game.step(action=action)
 
 

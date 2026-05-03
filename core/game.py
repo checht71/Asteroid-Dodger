@@ -86,7 +86,7 @@ class AsteroidDodger():
 
     
     
-    def step(self, action):
+    def step(self, action=0):
         """Main game loop step."""
         if self.AI_PLAYING:
             self.total_frames += 1
