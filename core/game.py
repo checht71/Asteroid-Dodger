@@ -18,7 +18,8 @@ class AsteroidDodger():
     # init
     def __init__(self, AI_PLAYING, HUMAN_PLAYING, training=False):
         self.AI_TRAINING = training
-        if AI_PLAYING or AI_TRAINING:
+        self.AI_PLAYING = AI_PLAYING
+        if AI_PLAYING or self.AI_TRAINING:
             self._init_ai()
         self._init_pygame()
         self._init_player(AI_PLAYING, HUMAN_PLAYING)
@@ -85,8 +86,8 @@ class AsteroidDodger():
     
     def step(self, action):
         """Main game loop step."""
-
-        self.total_frames += 1
+        if self.AI_PLAYING:
+            self.total_frames += 1
         self.done = False
 
         reward, truncated = 0, False
@@ -149,21 +150,21 @@ class AsteroidDodger():
 
     def _draw_move_and_check_obstacles(self):
         """Draw, move obstacles, and check for collision with players."""
+        reward = 1  # Default reward for no collision
+        
         for x in range(self.num_obstacles):
             self.obstacle[x].draw()
             self.obstacle[x].move(self.dt, self.game_difficulty_speed)
 
             for player in self.players:
                 if player.drawing.collidelist([self.obstacle[x].drawing]) != -1:
+                    # Collision detected
                     if self.AI_TRAINING:
-                        reward = -1
-                        return reward
+                        return -1
                     else:
                         self._handle_game_over()
                         return 0
-                else:
-                    reward = 1
-                    return reward
+    
 
     def _handle_game_over(self):
         """Handle collision and game over sequence."""

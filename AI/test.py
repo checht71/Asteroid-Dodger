@@ -4,12 +4,13 @@ import torch
 from core.game import AsteroidDodger
 from AI.agent import Agent
 import core.constants
+from AI.model import RocketNet
 from AI.hyperparameters import *
 
 
 env = AsteroidDodger(AI_PLAYING=True, HUMAN_PLAYING=False, training=True)
 
-observation, info = env.reset()
+observation, info = env.reset_game()
 
 
 agent = Agent(env, dropout=dropout, hidden_layer=hidden_layer,
@@ -18,8 +19,8 @@ agent = Agent(env, dropout=dropout, hidden_layer=hidden_layer,
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu' 
 
-model1 = ZombieNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, observation_shape=observation.shape).to(device)
-model2 = ZombieNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, observation_shape=observation.shape).to(device)
+model1 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, observation_shape=observation.shape).to(device)
+model2 = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, observation_shape=observation.shape).to(device)
 
 model1.load_the_model(filename='models/dqn1.pt')
 model2.load_the_model(filename='models/dqn2.pt')
@@ -46,7 +47,7 @@ for episode in range(episodes):
 
             action = torch.argmax(q_values, dim=-1, keepdim=True)
         
-        next_state, reward, done, truncated, info = env.step(action=action, repeat=step_repeat)
+        next_state, reward, done, truncated = env.ai_step(action=action, repeat=step_repeat)
 
         state = next_state
 
