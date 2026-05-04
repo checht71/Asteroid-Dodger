@@ -45,12 +45,12 @@ def load_model(game):
 
     model.eval()
 
-    return model
+    return observation, info, model, device
 
 
 game = AsteroidDodger(AI_PLAYING, HUMAN_PLAYING)
 if AI_PLAYING:
-    model = load_model(game)
+    state, into, model, device = load_model(game)
 
 while True:
 

@@ -78,10 +78,10 @@ class Player_AI(Player):
 
     def check_movement(self, action, dt, game_difficulty_speed):
 
-        up = True if action == 0 else False
-        down = True if action == 1 else False
-        left = True if action == 2 else False
-        right = True if action == 3 else False
+        up = True if action == 1 else False
+        down = True if action == 2 else False
+        left = True if action == 3 else False
+        right = True if action == 4 else False
 
 
         Player_speed = Player.SPEED_DEFAULT * dt + game_difficulty_speed

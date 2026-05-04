@@ -63,11 +63,6 @@ class Agent():
             os.makedirs('models')
         
         total_steps = 0
-        
-        # Early stopping variables
-        best_val_reward = -float('inf')
-        patience_counter = 0
-        validation_rewards = []
 
         for episode in range(episodes):
 
@@ -125,7 +120,7 @@ class Agent():
                     if episode_steps % 4 == 0:
                         soft_update(self.target_model, self.model)
 
-            self.model.save_the_model(filename=f'models/dqn_B_{episode}.pt')
+            self.model.save_the_model(filename=f'models/dqn_{AI.hyperparameters.agent_batch}_{episode}.pt')
 
             if epsilon > min_epsilon:
                 epsilon *= epsilon_decay
@@ -138,17 +133,15 @@ class Agent():
             print(f"Loss: {loss}")
                 
             # Write to CSV
-            with open('episode_results_2.csv', 'a', newline='') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=['Episode', 'Score', 'Loss', 'Time (seconds)', 'Steps', 'Avg_Val_Reward'])
+            with open(f'episode_results_{AI.hyperparameters.agent_batch}.csv', 'a', newline='\n') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=['Episode', 'Score', 'Loss', 'Time (seconds)', 'Steps'])
                 writer.writerow({
                     'Episode': episode,
                     'Score': episode_reward,
                     'Loss': loss,
                     'Time (seconds)': episode_time,
                     'Steps': episode_steps,
-                    'Avg_Val_Reward': avg_reward
                 })
 
         print(f"\nTraining completed!")
         print(f"Total episodes trained: {episode + 1}")
-        print(f"Best validation reward: {best_val_reward:.2f}")

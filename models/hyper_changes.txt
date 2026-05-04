@@ -1,0 +1,2 @@
+C:
+changed penalty to -1, decreased learning rate and epsilon

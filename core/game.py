@@ -80,7 +80,7 @@ class AsteroidDodger():
     def _init_ai(self):
         self.done = False
         self.total_frames = 0
-        self.action_space = gym.spaces.Discrete(4)
+        self.action_space = gym.spaces.Discrete(5)
         self.AI_last_pos_x = 0
         if self.HIDE_SCREEN:
             os.environ["SDL_VIDEODRIVER"] = "dummy"
@@ -105,13 +105,8 @@ class AsteroidDodger():
         self._update_physics()
         self._check_difficulty_progression()
 
-        if self.AI_PLAYING and self.total_frames % 20 == 0:
-            reward = self._check_ai_position_x(reward)
-
         if self.AI_TRAINING or self.AI_PLAYING:
             self.player_ai.check_movement(action, self.dt, self.game_difficulty_speed)
-        
-        print(reward)
 
         return reward, self.done, truncated
 
@@ -123,18 +118,9 @@ class AsteroidDodger():
         for i in range(repeat):
             reward, done, truncated = self.step(action)
         
-        total_reward = reward
+        total_reward = reward * AI.hyperparameters.reward_scaling
     
         return self._get_obs(), total_reward, self.done, truncated
-
-    def _check_ai_position_x(self, reward):
-        """Prevents the AI from hugging the walls of the screen."""
-        if self.AI_last_pos_x == self.player_ai.pos.x:
-            reward = -1
-        
-        
-        self.AI_last_pos_x = self.player_ai.pos.x
-        return reward
 
 
     def _draw_background_and_score(self):
@@ -255,10 +241,11 @@ class AsteroidDodger():
         screen_array = np.transpose(screen_array, (1, 0, 2))
         downscaled_image = cv2.resize(screen_array, (128, 128), interpolation=cv2.INTER_NEAREST)
 
-        # Save the image (Debugging purposes)
-        # cv2.imwrite('screenshot.png', downscaled_image)
+
 
         grayscale = cv2.cvtColor(downscaled_image, cv2.COLOR_RGB2GRAY)
+            #Save the image (Debugging purposes)
+        #cv2.imwrite('screenshot_2.png', downscaled_image)
 
         observation = torch.from_numpy(grayscale).float().unsqueeze(0)
 
