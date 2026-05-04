@@ -5,7 +5,6 @@ import torch.optim as optim
 import torch.nn.functional as F
 import datetime
 import time
-from torch.utils.tensorboard import SummaryWriter
 import random
 import os
 from core.game import AsteroidDodger
@@ -44,16 +43,31 @@ class Agent():
         print(f"Memory Size: {asizeof.asizeof(self.memory) / (1024 * 1024 * 1024):2f} Gb")
 
     
-    def train(self, episodes, max_episode_steps, summary_writer_suffix, batch_size, epsilon, epsilon_decay, min_epsilon):
-        """Train the DDQN agent for a specified number of episodes."""
-        summary_writer_name = f'runs/{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}_{summary_writer_suffix}'
-
-        writer = SummaryWriter(summary_writer_name)
+    def train(self, episodes, max_episode_steps, batch_size, epsilon, epsilon_decay, min_epsilon, 
+              validation_interval=4, patience=100, min_delta=0.0):
+        """Train the DDQN agent for a specified number of episodes with early stopping.
+        
+        Args:
+            episodes: Maximum number of episodes to train
+            max_episode_steps: Maximum steps per episode
+            batch_size: Batch size for training
+            epsilon: Initial exploration rate
+            epsilon_decay: Decay factor for epsilon
+            min_epsilon: Minimum epsilon value
+            validation_interval: Evaluate every N episodes (default: 25)
+            patience: Number of validation checks without improvement before stopping (default: 100)
+            min_delta: Minimum improvement threshold for validation metric (default: 0.0)
+        """
 
         if not os.path.exists('models'):
             os.makedirs('models')
         
         total_steps = 0
+        
+        # Early stopping variables
+        best_val_reward = -float('inf')
+        patience_counter = 0
+        validation_rewards = []
 
         for episode in range(episodes):
 
@@ -79,7 +93,6 @@ class Agent():
                 state = next_state
 
                 episode_reward += reward
-                #print(episode_reward)
                 episode_steps += 1
                 total_steps += 1
 
@@ -98,28 +111,21 @@ class Agent():
 
                     next_q_values = self.target_model(next_states).gather(1, next_actions)
 
-                    # Take the minimum of the next Q values
-
                     # Compute the target value using DQN
                     target_b = rewards.unsqueeze(1) + (1 - done) * self.gamma * next_q_values
 
                     # Compute Loss
                     loss = F.smooth_l1_loss(qsa_b, target_b.detach())
 
-                    writer.add_scalar("Loss/Model", loss.item(), total_steps)
-
                     # Backprop
                     self.model.zero_grad()
                     loss.backward()
                     self.optimizer.step()
                     
-                    
                     if episode_steps % 4 == 0:
                         soft_update(self.target_model, self.model)
 
-            self.model.save_the_model(filename=f'models/dqn_{episode}.pt')
-            writer.add_scalar('Score', episode_reward, episode)
-            writer.add_scalar('Epsilon', epsilon, episode)
+            self.model.save_the_model(filename=f'models/dqn_B_{episode}.pt')
 
             if epsilon > min_epsilon:
                 epsilon *= epsilon_decay
@@ -128,16 +134,21 @@ class Agent():
 
             print(f"Completed episode {episode} with score {episode_reward}")
             print(f"Episode Time: {episode_time:1f} seconds")
-            print(f"Episode Steps: {episode_steps}") 
-                    
-
-            # In your training loop:
-            with open('episode_results.csv', 'a', newline='') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=['Episode', 'Score', 'Time (seconds)', 'Steps'])
+            print(f"Episode Steps: {episode_steps}")
+            print(f"Loss: {loss}")
+                
+            # Write to CSV
+            with open('episode_results_2.csv', 'a', newline='') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=['Episode', 'Score', 'Loss', 'Time (seconds)', 'Steps', 'Avg_Val_Reward'])
                 writer.writerow({
                     'Episode': episode,
                     'Score': episode_reward,
-                    'Time (seconds)': f"{episode_time:.1f}",
-                    'Steps': episode_steps
+                    'Loss': loss,
+                    'Time (seconds)': episode_time,
+                    'Steps': episode_steps,
+                    'Avg_Val_Reward': avg_reward
                 })
 
+        print(f"\nTraining completed!")
+        print(f"Total episodes trained: {episode + 1}")
+        print(f"Best validation reward: {best_val_reward:.2f}")

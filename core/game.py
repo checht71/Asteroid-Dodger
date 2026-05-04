@@ -81,6 +81,7 @@ class AsteroidDodger():
         self.done = False
         self.total_frames = 0
         self.action_space = gym.spaces.Discrete(4)
+        self.AI_last_pos_x = 0
         if self.HIDE_SCREEN:
             os.environ["SDL_VIDEODRIVER"] = "dummy"
 
@@ -92,6 +93,7 @@ class AsteroidDodger():
             self.total_frames += 1
         self.done = False
 
+        # default reward for not hitting anything is 1
         reward, truncated = 1, False
 
         self._draw_background_and_score()
@@ -103,8 +105,13 @@ class AsteroidDodger():
         self._update_physics()
         self._check_difficulty_progression()
 
+        if self.AI_PLAYING and self.total_frames % 20 == 0:
+            reward = self._check_ai_position_x(reward)
+
         if self.AI_TRAINING or self.AI_PLAYING:
             self.player_ai.check_movement(action, self.dt, self.game_difficulty_speed)
+        
+        print(reward)
 
         return reward, self.done, truncated
 
@@ -119,6 +126,15 @@ class AsteroidDodger():
         total_reward = reward
     
         return self._get_obs(), total_reward, self.done, truncated
+
+    def _check_ai_position_x(self, reward):
+        """Prevents the AI from hugging the walls of the screen."""
+        if self.AI_last_pos_x == self.player_ai.pos.x:
+            reward = -1
+        
+        
+        self.AI_last_pos_x = self.player_ai.pos.x
+        return reward
 
 
     def _draw_background_and_score(self):

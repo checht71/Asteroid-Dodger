@@ -20,8 +20,8 @@ agent = Agent(env, dropout=dropout, hidden_layer=hidden_layer,
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu' 
 
 model = RocketNet(action_dim=env.action_space.n, hidden_dim=hidden_layer, observation_shape=observation.shape).to(device)
-
-model.load_the_model(filename='models/dqn1.pt')
+model.load_state_dict(torch.load('models/dqn_58.pt', map_location=device))
+model.to(device)
 
 
 model.eval()

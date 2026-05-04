@@ -1,0 +1,2 @@
+0,711,81.9,1250
+0,634,"tensor(0.0795, device='cuda:0', grad_fn=<SmoothL1LossBackward0>)",81.80270981788635,1250

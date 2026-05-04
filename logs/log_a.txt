@@ -1,0 +1,199 @@
+Reward: +1 for each noncollision
+-10 on collision
+
+Completed episode 0 with score 634
+Episode Time: 81.802710 seconds
+Episode Steps: 1250
+Completed episode 1 with score 73
+Episode Time: 80.897491 seconds
+Episode Steps: 1250
+Completed episode 2 with score 392
+Episode Time: 80.975387 seconds
+Episode Steps: 1250
+Completed episode 3 with score 392
+Episode Time: 80.912167 seconds
+Episode Steps: 1250
+Completed episode 4 with score 546
+Episode Time: 81.253551 seconds
+Episode Steps: 1250
+Completed episode 5 with score 458
+Episode Time: 81.013861 seconds
+Episode Steps: 1250
+Completed episode 6 with score 183
+Episode Time: 80.926249 seconds
+Episode Steps: 1250
+Completed episode 7 with score 293
+Episode Time: 80.889737 seconds
+Episode Steps: 1250
+Completed episode 8 with score 392
+Episode Time: 80.897938 seconds
+Episode Steps: 1250
+Completed episode 9 with score 392
+Episode Time: 80.987520 seconds
+Episode Steps: 1250
+Completed episode 10 with score 348
+Episode Time: 81.006600 seconds
+Episode Steps: 1250
+Completed episode 11 with score 766
+Episode Time: 81.027939 seconds
+Episode Steps: 1250
+Completed episode 12 with score 370
+Episode Time: 80.892996 seconds
+Episode Steps: 1250
+Completed episode 13 with score 117
+Episode Time: 80.980109 seconds
+Episode Steps: 1250
+Completed episode 14 with score 348
+Episode Time: 80.976596 seconds
+Episode Steps: 1250
+Completed episode 15 with score 524
+Episode Time: 80.939973 seconds
+Episode Steps: 1250
+Completed episode 16 with score 469
+Episode Time: 80.992949 seconds
+Episode Steps: 1250
+Completed episode 17 with score 117
+Episode Time: 81.058438 seconds
+Episode Steps: 1250
+Completed episode 18 with score 293
+Episode Time: 80.955785 seconds
+Episode Steps: 1250
+Completed episode 19 with score 546
+Episode Time: 80.964765 seconds
+Episode Steps: 1250
+Completed episode 20 with score 590
+Episode Time: 81.054479 seconds
+Episode Steps: 1250
+Completed episode 21 with score 381
+Episode Time: 80.923544 seconds
+Episode Steps: 1250
+Completed episode 22 with score 524
+Episode Time: 80.941510 seconds
+Episode Steps: 1250
+Completed episode 23 with score 480
+Episode Time: 80.932190 seconds
+Episode Steps: 1250
+Completed episode 24 with score 656
+Episode Time: 81.027176 seconds
+Episode Steps: 1250
+Completed episode 25 with score 271
+Episode Time: 80.910505 seconds
+Episode Steps: 1250
+Completed episode 26 with score 480
+Episode Time: 80.999332 seconds
+Episode Steps: 1250
+Completed episode 27 with score 601
+Episode Time: 80.925249 seconds
+Episode Steps: 1250
+Completed episode 28 with score 293
+Episode Time: 80.897649 seconds
+Episode Steps: 1250
+Completed episode 29 with score 590
+Episode Time: 80.996581 seconds
+Episode Steps: 1250
+Completed episode 30 with score 645
+Episode Time: 80.965317 seconds
+Episode Steps: 1250
+Completed episode 31 with score 678
+Episode Time: 80.994161 seconds
+Episode Steps: 1250
+Completed episode 32 with score 491
+Episode Time: 81.049310 seconds
+Episode Steps: 1250
+Completed episode 33 with score 491
+Episode Time: 81.198078 seconds
+Episode Steps: 1250
+Completed episode 34 with score 601
+Episode Time: 81.025457 seconds
+Episode Steps: 1250
+Completed episode 35 with score 546
+Episode Time: 81.041416 seconds
+Episode Steps: 1250
+Completed episode 36 with score 821
+Episode Time: 80.973992 seconds
+Episode Steps: 1250
+Completed episode 37 with score 304
+Episode Time: 80.979545 seconds
+Episode Steps: 1250
+Completed episode 38 with score 370
+Episode Time: 81.104352 seconds
+Episode Steps: 1250
+Completed episode 39 with score 117
+Episode Time: 81.142301 seconds
+Episode Steps: 1250
+Completed episode 40 with score 491
+Episode Time: 81.248553 seconds
+Episode Steps: 1250
+Completed episode 41 with score 271
+Episode Time: 81.180236 seconds
+Episode Steps: 1250
+Completed episode 42 with score 568
+Episode Time: 81.106725 seconds
+Episode Steps: 1250
+Completed episode 43 with score 73
+Episode Time: 81.029712 seconds
+Episode Steps: 1250
+Completed episode 44 with score 601
+Episode Time: 81.196111 seconds
+Episode Steps: 1250
+Completed episode 45 with score 183
+Episode Time: 81.175412 seconds
+Episode Steps: 1250
+Completed episode 46 with score 425
+Episode Time: 81.264449 seconds
+Episode Steps: 1250
+Completed episode 47 with score 535
+Episode Time: 81.191307 seconds
+Episode Steps: 1250
+Completed episode 48 with score 271
+Episode Time: 81.091841 seconds
+Episode Steps: 1250
+Completed episode 49 with score 315
+Episode Time: 81.235735 seconds
+Episode Steps: 1250
+Completed episode 50 with score 348
+Episode Time: 81.068841 seconds
+Episode Steps: 1250
+Completed episode 51 with score 304
+Episode Time: 81.103330 seconds
+Episode Steps: 1250
+Completed episode 52 with score 348
+Episode Time: 81.019777 seconds
+Episode Steps: 1250
+Completed episode 53 with score 359
+Episode Time: 81.067834 seconds
+Episode Steps: 1250
+Completed episode 54 with score 194
+Episode Time: 81.258996 seconds
+Episode Steps: 1250
+Completed episode 55 with score 370
+Episode Time: 81.160694 seconds
+Episode Steps: 1250
+Completed episode 56 with score 689
+Episode Time: 81.153532 seconds
+Episode Steps: 1250
+Completed episode 57 with score 821
+Episode Time: 81.073959 seconds
+Episode Steps: 1250
+Completed episode 58 with score 326
+Episode Time: 81.238355 seconds
+Episode Steps: 1250
+Completed episode 59 with score 392
+Episode Time: 81.331140 seconds
+Episode Steps: 1250
+Completed episode 60 with score 139
+Episode Time: 81.156311 seconds
+Episode Steps: 1250
+Completed episode 61 with score 425
+Episode Time: 81.280213 seconds
+Episode Steps: 1250
+Completed episode 62 with score 546
+Episode Time: 81.047240 seconds
+Episode Steps: 1250
+Completed episode 63 with score -48
+Episode Time: 81.070753 seconds
+Episode Steps: 1250
+Completed episode 64 with score 392
+Episode Time: 81.094555 seconds
+Episode Steps: 1250
+

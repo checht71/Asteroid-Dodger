@@ -4,3 +4,4 @@ torch
 pympler
 tensorboard
 argparse
+opencv-python
