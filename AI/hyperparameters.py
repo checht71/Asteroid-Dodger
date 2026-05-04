@@ -1,5 +1,5 @@
 # Model parameters
-episodes = 10
+episodes = 100
 max_episode_steps = 5000
 total_steps = 0
 step_repeat = 4

@@ -11,6 +11,7 @@ import os
 from core.game import AsteroidDodger
 from pympler import asizeof
 from AI.hyperparameters import buffer_max_size
+import csv
 
 
 class Agent():
@@ -116,7 +117,7 @@ class Agent():
                     if episode_steps % 4 == 0:
                         soft_update(self.target_model, self.model)
 
-            self.model.save_the_model(filename='models/dqn1.pt')
+            self.model.save_the_model(filename=f'models/dqn_{episode}.pt')
             writer.add_scalar('Score', episode_reward, episode)
             writer.add_scalar('Epsilon', epsilon, episode)
 
@@ -129,4 +130,14 @@ class Agent():
             print(f"Episode Time: {episode_time:1f} seconds")
             print(f"Episode Steps: {episode_steps}") 
                     
+
+            # In your training loop:
+            with open('episode_results.csv', 'a', newline='') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=['Episode', 'Score', 'Time (seconds)', 'Steps'])
+                writer.writerow({
+                    'Episode': episode,
+                    'Score': episode_reward,
+                    'Time (seconds)': f"{episode_time:.1f}",
+                    'Steps': episode_steps
+                })
 
